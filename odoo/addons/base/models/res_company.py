@@ -10,6 +10,7 @@ from odoo import api, fields, models, tools, _, Command, SUPERUSER_ID
 from odoo.exceptions import ValidationError, UserError
 from odoo.osv import expression
 from odoo.tools import html2plaintext, file_open, ormcache
+from datetime import date, datetime, time
 
 _logger = logging.getLogger(__name__)
 
@@ -32,6 +33,8 @@ class Company(models.Model):
         return self.env.user.company_id.currency_id
 
     name = fields.Char(related='partner_id.name', string='Company Name', required=True, store=True, readonly=False)
+    name_ar = fields.Char(string='Arabic Company Name', required=True, store=True, readonly=False)
+    name_abbreviated = fields.Char(string='abbreviated name', required=True, store=True, readonly=False)
     active = fields.Boolean(default=True)
     sequence = fields.Integer(help='Used to order Companies in the company switcher', default=10)
     parent_id = fields.Many2one('res.company', string='Parent Company', index=True, ondelete='restrict')
@@ -62,6 +65,9 @@ class Company(models.Model):
     )
     bank_ids = fields.One2many(related='partner_id.bank_ids', readonly=False)
     country_id = fields.Many2one('res.country', compute='_compute_address', inverse='_inverse_country', string="Country")
+    #New fields academic_start_year budget_year
+    academic_start_year = fields.Selection(selection='_academic_year_selection', string="Academic start year", default=str(datetime.now().year))
+    budget_year = fields.Selection(selection='_budget_year', string="budget year", default=str(datetime.now().year))
     # Technical field to hide country specific fields in company form view
     country_code = fields.Char(related='country_id.code', depends=['country_id'])
     email = fields.Char(related='partner_id.email', store=True, readonly=False)
@@ -148,6 +154,17 @@ class Company(models.Model):
     def _inverse_country(self):
         for company in self:
             company.partner_id.country_id = company.country_id
+    def _academic_year_selection(self):
+         year_list = []
+         for year in range(datetime.now().year-5, datetime.now().year + 5):
+          year_list.append((str(year), str(year)+'-'+str(year+1)))
+         return year_list
+    
+    def _budget_year (self):
+         year_list = []
+         for year in range(datetime.now().year-5, datetime.now().year + 5):
+          year_list.append((str(year), str(year)))
+         return year_list
 
     @api.depends('partner_id.image_1920')
     def _compute_logo_web(self):
