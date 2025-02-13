@@ -33,10 +33,16 @@ class HrEmployeePrivate(models.Model):
     @api.model
     def _lang_get(self):
         return self.env['res.lang'].get_installed()
+    @api.model
+    def _default_country_TN(self):
+        return self.env['res.country'].search([('code', '=', 'TN')], limit=1)
 
     # resource and user
     # required on the resource, make sure required="True" set in the view
     name = fields.Char(string="Employee Name", related='resource_id.name', store=True, readonly=False, tracking=True)
+        # Ajout arabic name
+    name_ar = fields.Char(string='Nom & Prénom en arabe ', store=True, readonly=False, tracking=True)
+
     user_id = fields.Many2one(
         'res.users', 'User',
         related='resource_id.user_id',
@@ -66,7 +72,7 @@ class HrEmployeePrivate(models.Model):
     private_email = fields.Char(string="Private Email", groups="hr.group_hr_user")
     lang = fields.Selection(selection=_lang_get, string="Lang", groups="hr.group_hr_user")
     country_id = fields.Many2one(
-        'res.country', 'Nationality (Country)', groups="hr.group_hr_user", tracking=True)
+        'res.country', 'Nationality (Country)',default= _default_country_TN , groups="hr.group_hr_user", tracking=True)
     gender = fields.Selection([
         ('male', 'Male'),
         ('female', 'Female'),
@@ -84,11 +90,13 @@ class HrEmployeePrivate(models.Model):
     spouse_birthdate = fields.Date(string="Spouse Birthdate", groups="hr.group_hr_user", tracking=True)
     children = fields.Integer(string='Number of Dependent Children', groups="hr.group_hr_user", tracking=True)
     place_of_birth = fields.Char('Place of Birth', groups="hr.group_hr_user", tracking=True)
-    country_of_birth = fields.Many2one('res.country', string="Country of Birth", groups="hr.group_hr_user", tracking=True)
+    country_of_birth = fields.Many2one('res.country', string="Country of Birth", default= _default_country_TN ,groups="hr.group_hr_user", tracking=True)
     birthday = fields.Date('Date of Birth', groups="hr.group_hr_user", tracking=True)
-    ssnid = fields.Char('SSN No', help='Social Security Number', groups="hr.group_hr_user", tracking=True)
+    # ssnid-> CIN
+    ssnid = fields.Char(string='CIN', help="Carte d'identité nationale",size=8, groups="hr.group_hr_user", tracking=True)
     sinid = fields.Char('SIN No', help='Social Insurance Number', groups="hr.group_hr_user", tracking=True)
-    identification_id = fields.Char(string='Identification No', groups="hr.group_hr_user", tracking=True)
+    # identification_id-> Matricule
+    identification_id = fields.Char(string='Matricule',help="Identifiant unique",size=10, groups="hr.group_hr_user", tracking=True)
     passport_id = fields.Char('Passport No', groups="hr.group_hr_user", tracking=True)
     bank_account_id = fields.Many2one(
         'res.partner.bank', 'Bank Account',
@@ -121,16 +129,18 @@ class HrEmployeePrivate(models.Model):
         ('kilometers', 'km'),
         ('miles', 'mi'),
     ], 'Home-Work Distance unit', tracking=True, groups="hr.group_hr_user", default='kilometers', required=True)
+   # ...existing code...
     employee_type = fields.Selection([
-            ('employee', 'Employee'),
-            ('worker', 'Worker'),
-            ('student', 'Student'),
-            ('trainee', 'Trainee'),
-            ('contractor', 'Contractor'),
-            ('freelance', 'Freelancer'),
-        ], string='Employee Type', default='employee', required=True, groups="hr.group_hr_user",
-        help="Categorize your Employees by type. This field also has an impact on contracts. Only Employees, Students and Trainee will have contract history.")
-
+        ('employee', 'Administratif'),
+        ('enseignant', 'Enseignant'),
+        ('visiteur', 'Visiteur'),
+        ('vacataire', 'Vacataire'),
+        ('student', 'Etudiant'),
+        ('trainee', 'Stagiaire'),  
+        ('other', 'Autre'),
+    ], string='Employee Type', default='employee', required=True, groups="hr.group_hr_user",
+    help="Categorize your Employees by type. This field also has an impact on contracts. Only Employees, Students and Trainee will have contract history.")
+# ...existing code...
     job_id = fields.Many2one(tracking=True)
     # employee in company
     child_ids = fields.One2many('hr.employee', 'parent_id', string='Direct subordinates')
@@ -154,6 +164,18 @@ class HrEmployeePrivate(models.Model):
     private_car_plate = fields.Char(groups="hr.group_hr_user", help="If you have more than one car, just separate the plates by a space.")
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True, groups="hr.group_hr_user")
     related_partners_count = fields.Integer(compute="_compute_related_partners_count", groups="hr.group_hr_user")
+    # New fiels for university of manstir
+    date_entree_administration = fields.Date(string="Date d’entrée dans l’administration", groups="hr.group_hr_user", tracking=True)
+    date_entree_etablissement = fields.Date(string="Date d'entrée l'établissement", groups="hr.group_hr_user", tracking=True)
+    date_nomination_grade = fields.Date(string="Date de nomination au grade", groups="hr.group_hr_user", tracking=True)
+    date_titularisation = fields.Date(string="Date de titularisation", groups="hr.group_hr_user", tracking=True)
+    titularisation = fields.Selection([
+        ('titulaire', 'Titulaire'),
+        ('stagiaire', 'Stagiaire'),
+        ('contractuel', 'Contractuel'),
+        ('temporaire', 'Temporaire'),
+    ], string='Titularisation', groups="hr.group_hr_user", default='titulaire', tracking=True)
+
     # properties
     employee_properties = fields.Properties('Properties', definition='company_id.employee_properties_definition', precompute=False, groups="hr.group_hr_user")
 

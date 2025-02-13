@@ -77,6 +77,9 @@
                                         required="True" style="font-size: min(4vw, 2.6rem);"/>
                                 </h1>
                                 <h2>
+                                    <field name="name_ar" placeholder="الإسم و اللقب" class="o_force_rtl"/>
+                                </h2>
+                                <h2>
                                     <field name="job_title" placeholder="Job Title"/>
                                 </h2>
                             </div>
@@ -88,15 +91,17 @@
                         </div>
                         <group>
                             <group>
-                                <field name="work_email" widget="email" placeholder="e.g. johndoe@example.com"/>
+                                <field name="identification_id"  placeholder="Matricule"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="company_country_id" invisible="1"/>
+                                <field name="company_country_code" invisible="1"/>
+                                <field name="work_email" widget="email" placeholder="e.g. nom.prenom@u-monastir.tn"/>
                                 <field name="work_phone" widget="phone"/>
                                 <field name="mobile_phone" widget="phone"/>
                                 <field name="category_ids" widget="many2many_tags"
                                     options="{'color_field': 'color', 'no_create_edit': True}"
                                     placeholder="Tags" groups="hr.group_hr_user"/>
-                                <field name="company_id" groups="base.group_multi_company"/>
-                                <field name="company_country_id" invisible="1"/>
-                                <field name="company_country_code" invisible="1"/>
+
                             </group>
                             <group>
                                 <field name="department_id"/>
@@ -107,6 +112,19 @@
                         </group>
                         <field name="employee_properties" columns="2"/>
                         <notebook>
+                            <page name="hr_administrative" string="Données administratives" groups="hr.group_hr_user">
+                                <group>
+                                    <group>
+                                        <field name="date_entree_administration"/>
+                                        <field name="titularisation"/>
+                                    </group>
+                                    <group>
+                                        <field name="date_entree_etablissement" />
+                                        <field name="date_titularisation" />
+                                        <field name="date_nomination_grade" />
+                                    </group>
+                                </group>
+                            </page>
                             <page name="public" string="Work Information">
                                 <div id="o_work_employee_container" class="d-lg-flex"> <!-- These two div are used to position org_chart -->
                                     <div id="o_work_employee_main" class="flex-grow-1">
@@ -147,17 +165,16 @@
                                         <field name="private_email" placeholder="e.g. myprivateemail@example.com"/>
                                         <field name="private_phone"/>
                                         <field name="bank_account_id" context="{'default_partner_id': work_contact_id}" options="{'no_quick_create': True}" readonly="not id"/>
-                                        <label for="distance_home_work"/>
-                                        <div class="o_row" name="div_km_home_work">
+                                        <label for="distance_home_work" invisible="1" />
+                                        <div class="o_row" name="div_km_home_work" invisible="1">
                                             <field name="distance_home_work" class="o_hr_narrow_field"/>
                                             <span><field name="distance_home_work_unit"/></span>
                                         </div>
-                                        <field name="private_car_plate" />
+                                        <field name="private_car_plate" invisible="1"/>
                                     </group>
                                     <group string="Citizenship">
                                         <field name="country_id" options='{"no_open": True, "no_create": True}'/>
-                                        <field name="identification_id"/>
-                                        <field name="ssnid"/>
+                                        <field name="ssnid" placeholder="CIN" />
                                         <field name="passport_id"/>
                                         <field name="gender"/>
                                         <field name="birthday"/>
@@ -178,10 +195,10 @@
                                         <field name="study_field"/>
                                         <field name="study_school"/>
                                         <separator name="has_work_permit" string="Work Permit"/>
-                                        <field name="visa_no"/>
-                                        <field name="permit_no"/>
-                                        <field name="visa_expire"/>
-                                        <field name="work_permit_expiration_date"/>
+                                        <field name="visa_no" invisible="1"/>
+                                        <field name="permit_no" invisible="1"/>
+                                        <field name="visa_expire" invisible="1"/>
+                                        <field name="work_permit_expiration_date" invisible="1"/>
                                         <field name="work_permit_name" invisible="1"/>
                                         <field name="has_work_permit" widget="work_permit_upload" filename="work_permit_name"/>
                                     </group>
@@ -264,6 +281,7 @@
                         <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_user"/>
                     </header>
                     <field name="name" readonly="1"/>
+                    <field name="name_ar" readonly="1"/>
                     <field name="work_phone" class="o_force_ltr" readonly="1" optional="show"/>
                     <field name="work_email"/>
                     <field name="activity_ids" widget="list_activity" optional="show"/>
@@ -318,7 +336,14 @@
                                         <field name="hr_icon_display" class="o_employee_availability" widget="hr_presence_status" />
                                     </div>
                                 </div>
+                                <span t-if="record.name_ar.raw_value" class="o_kanban_record_subtitle">
+                                        <field name="name_ar"/>
+                                </span>
                                 <field t-if="record.job_title.raw_value" name="job_title"/>
+                                <div t-if="record.identification_id.raw_value">
+                                    <i class="fa fa-fw me-2 fa-id-card text-primary" title="Matricule"/>
+                                    <field name="identification_id" />
+                                </div>
                                 <div t-if="record.work_email.raw_value" class="o_text_overflow">
                                     <i class="fa fa-fw me-2 fa-envelope text-primary" title="Email"/>
                                     <field name="work_email" />
