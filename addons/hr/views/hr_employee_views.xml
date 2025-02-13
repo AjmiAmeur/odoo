@@ -117,6 +117,7 @@
                                     <group>
                                         <field name="date_entree_administration"/>
                                         <field name="titularisation"/>
+                                         <field name="position_id"/>
                                     </group>
                                     <group>
                                         <field name="date_entree_etablissement" />

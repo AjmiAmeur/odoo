@@ -175,6 +175,7 @@ class HrEmployeePrivate(models.Model):
         ('contractuel', 'Contractuel'),
         ('temporaire', 'Temporaire'),
     ], string='Titularisation', groups="hr.group_hr_user", default='titulaire', tracking=True)
+    position_id  = fields.Many2one('hr.employee.position', string="Position administrative", groups="hr.group_hr_user", tracking=True)
 
     # properties
     employee_properties = fields.Properties('Properties', definition='company_id.employee_properties_definition', precompute=False, groups="hr.group_hr_user")
