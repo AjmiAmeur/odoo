@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_employee_corps_form" model="ir.ui.view">
+        <field name="name">hr.employee.corps.form</field>
+        <field name="model">hr.employee.corps</field>
+        <field name="arch" type="xml">
+            <form string="Corps des administrations publiques">
+                <sheet>
+                    <group>
+                        <field name="type"/>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+     </record>
+
+     <record id="view_employee_corps_list" model="ir.ui.view">
+        <field name="name">hr.employee.corps.list</field>
+        <field name="model">hr.employee.corps</field>
+        <field name="arch" type="xml">
+            <list string="Corps des administrations publiques">
+                <field name="type"/>
+                <field name="name"/>
+            </list>
+        </field>
+     </record>
+
+     <record id="open_view_corps_form" model="ir.actions.act_window">
+        <field name="name">Corps des administrations publiques</field>
+        <field name="res_model">hr.employee.corps</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Corps found ! Let's create one
+            </p>
+            <p>
+                Use corps to categorize your Employees.
+            </p>
+        </field>
+     </record>
+ </odoo>
