@@ -84,6 +84,12 @@
                 sequence="5"
                 groups="group_hr_user"/>
             <menuitem
+                id="menu_hr_employee_grade_tree"
+                action="open_view_grade_form"
+                parent="menu_config_employee"
+                sequence="4"
+                groups="group_hr_user"/>    
+            <menuitem
                 id="menu_hr_employee_corps_tree"
                 action="open_view_corps_form"
                 parent="menu_config_employee"

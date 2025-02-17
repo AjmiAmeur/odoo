@@ -11,6 +11,8 @@ access_hr_position_user,hr.position.user,model_hr_employee_position,group_hr_use
 access_hr_position_employee,hr.position.employee,model_hr_employee_position,base.group_user,1,0,0,0
 access_hr_corps_user,hr.corps.user,model_hr_employee_corps,group_hr_user,1,1,1,1
 access_hr_corps_employee,hr.corps.employee,model_hr_employee_corps,base.group_user,1,0,0,0
+access_hr_grade_user,hr.grade.user,model_hr_employee_grade,group_hr_user,1,1,1,1
+access_hr_grade_employee,hr.grade.employee,model_hr_employee_grade,base.group_user,1,0,0,0
 access_hr_categorie_administrative_user,hr.categorie.administrative.user,model_hr_categorie_administrative,group_hr_user,1,1,1,1
 access_hr_categorie_administrative_employee,hr.categorie.administrative.employee,model_hr_categorie_administrative,base.group_user,1,0,0,0
 access_hr_job_user,hr.job user,model_hr_job,group_hr_user,1,1,1,1

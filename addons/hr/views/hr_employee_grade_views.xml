@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_employee_grade_form" model="ir.ui.view">
+        <field name="name">hr.employee.grade.form</field>
+        <field name="model">hr.employee.grade</field>
+        <field name="arch" type="xml">
+            <form string="Grades de la fonction publique">
+                <sheet>
+                    <group>
+                        <field name="type"/>
+                        <field name="corps_id"/>
+                        <field name="name"/>
+                        <field name="categorie_administrative_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+     </record>
+
+     <record id="view_employee_grade_list" model="ir.ui.view">
+        <field name="name">hr.employee.grade.list</field>
+        <field name="model">hr.employee.grade</field>
+        <field name="arch" type="xml">
+            <list string="Grades de la fonction publique">
+                        <field name="type"/>
+                        <field name="corps_id"/>
+                        <field name="name"/>
+                        <field name="categorie_administrative_id"/>        
+            </list>
+        </field>
+     </record>
+
+     <record id="open_view_grade_form" model="ir.actions.act_window">
+        <field name="name">Grades de la fonction publique</field>
+        <field name="res_model">hr.employee.grade</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Grade found ! Let's create one
+            </p>
+            <p>
+                Use grade to categorize your Employees.
+            </p>
+        </field>
+     </record>
+ </odoo>

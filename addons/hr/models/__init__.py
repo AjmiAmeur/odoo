@@ -3,6 +3,7 @@
 
 from . import hr_employee_corps
 from . import hr_categorie_administrative
+from . import hr_employee_grade
 from . import hr_employee_position
 from . import hr_contract_type
 from . import hr_employee_base
