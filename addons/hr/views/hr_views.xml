@@ -93,9 +93,14 @@
                 id="menu_hr_employee_corps_tree"
                 action="open_view_corps_form"
                 parent="menu_config_employee"
-                sequence="2"
+                sequence="3"
                 groups="group_hr_user"/>    
-
+            <menuitem
+                id="menu_hr_categorie_administrative_tree"
+                action="open_view_categorie_administrative_form"
+                parent="menu_config_employee"
+                sequence="2"
+                groups="group_hr_user"/>   
             <menuitem
                 id="menu_resource_calendar_view"
                 action="resource.action_resource_calendar_form"

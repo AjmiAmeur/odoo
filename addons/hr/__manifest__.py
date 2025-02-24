@@ -35,6 +35,7 @@
         'views/hr_employee_views.xml',
         'views/hr_department_views.xml',
         'views/hr_work_location_views.xml',
+        'views/hr_categorie_administrative_views.xml',
         'views/hr_employee_coprs_views.xml',
         'views/hr_employee_grade_views.xml',
         'views/hr_views.xml',

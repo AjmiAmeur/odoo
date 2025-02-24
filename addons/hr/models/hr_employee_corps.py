@@ -18,7 +18,7 @@ class HrEmployeeCorps(models.Model):
     # color = fields.Integer(string='Color Index', default=_get_default_color)
     # employee_ids = fields.One2many('hr.employee', 'corps_id', string='Employees')
     type = fields.Selection([
-        ('employee', 'Administratif'),
+        ('employee', 'Personnels IATOS'),
         ('enseignant', 'Enseignant'),
         ('visiteur', 'Visiteur'),
         ('vacataire', 'Vacataire'),
@@ -27,6 +27,7 @@ class HrEmployeeCorps(models.Model):
         ('other', 'Autre'),
         ], string="Types d'employé", default='employee', required=True, groups="hr.group_hr_user",
         help="Administratif/Enseignant/Visiteur/vacataire/Etudiant/Stagiaire/Autre")
+    sous_type_id  = fields.Many2one('hr.sous.type', string="Sous-Type", required=True,domain="[('type', '=?', type)]",groups="hr.group_hr_user")
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "Corps deja existe!"),

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from. import hr_sous_type
 from . import hr_employee_corps
 from . import hr_categorie_administrative
 from . import hr_employee_grade

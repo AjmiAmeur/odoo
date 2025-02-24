@@ -130,16 +130,18 @@ class HrEmployeePrivate(models.Model):
         ('miles', 'mi'),
     ], 'Home-Work Distance unit', tracking=True, groups="hr.group_hr_user", default='kilometers', required=True)
    # ...existing code...
-    employee_type = fields.Selection([
-        ('employee', 'Administratif'),
-        ('enseignant', 'Enseignant'),
-        ('visiteur', 'Visiteur'),
-        ('vacataire', 'Vacataire'),
-        ('student', 'Etudiant'),
-        ('trainee', 'Stagiaire'),  
-        ('other', 'Autre'),
-    ], string='Employee Type', default='employee', required=True, groups="hr.group_hr_user",
-    help="Categorize your Employees by type. This field also has an impact on contracts. Only Employees, Students and Trainee will have contract history.")
+    # employee_type = fields.Selection([
+    #     ('employee', 'Administratif'),
+    #     ('enseignant', 'Enseignant'),
+    #     ('visiteur', 'Visiteur'),
+    #     ('vacataire', 'Vacataire'),
+    #     ('student', 'Etudiant'),
+    #     ('trainee', 'Stagiaire'),  
+    #     ('other', 'Autre'),
+    # ], string='Employee Type', default='employee', required=True, groups="hr.group_hr_user",
+    # help="Categorize your Employees by type. This field also has an impact on contracts. Only Employees, Students and Trainee will have contract history.")
+    employee_type = fields.Selection(string="Employee Type", related='grade_id.type', store=True, readonly=True, tracking=True)
+    
 # ...existing code...
     job_id = fields.Many2one(tracking=True)
     # employee in company
@@ -176,6 +178,17 @@ class HrEmployeePrivate(models.Model):
         ('temporaire', 'Temporaire'),
     ], string='Titularisation', groups="hr.group_hr_user", default='titulaire', tracking=True)
     position_id  = fields.Many2one('hr.employee.position', string="Position administrative", groups="hr.group_hr_user", tracking=True)
+
+    sous_type_id  = fields.Many2one('hr.sous.type', string="Sous-Type", groups="hr.group_hr_user", related='grade_id.sous_type_id', store=True, readonly=True, ondelete='restrict')
+    sous_type_name = fields.Char(string="Sous-Type", related='sous_type_id.name', store=False)
+
+    corps_id  = fields.Many2one('hr.employee.corps', string="corps", groups="hr.group_hr_user", related='grade_id.corps_id', store=True, readonly=True, ondelete='restrict')
+    corps_name = fields.Char(string="corps", related='corps_id.name', store=False)
+    
+    categorie_administrative_id  = fields.Many2one('hr.categorie.administrative', string="Catégorie administrative", groups="hr.group_hr_user",related='grade_id.categorie_administrative_id', store=True, readonly=True, ondelete='restrict' )
+    categorie_administrative_name = fields.Char(string="categorie administrative", related='categorie_administrative_id.name', store=False)
+
+    grade_id  = fields.Many2one('hr.employee.grade', string="Grade ", groups="hr.group_hr_user", tracking=True)
 
     # properties
     employee_properties = fields.Properties('Properties', definition='company_id.employee_properties_definition', precompute=False, groups="hr.group_hr_user")

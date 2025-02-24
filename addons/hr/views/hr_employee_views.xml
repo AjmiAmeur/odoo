@@ -117,12 +117,20 @@
                                     <group>
                                         <field name="date_entree_administration"/>
                                         <field name="titularisation"/>
-                                         <field name="position_id"/>
+                                        <field name="grade_id"/>
+                                         <field name="employee_type"/>
+                                        <field name="sous_type_name" />
+                                        <field name="corps_name" />
+                                        <field name="categorie_administrative_name" />
+                                        
+
                                     </group>
                                     <group>
                                         <field name="date_entree_etablissement" />
                                         <field name="date_titularisation" />
                                         <field name="date_nomination_grade" />
+                                        <field name="position_id"/>
+
                                     </group>
                                 </group>
                             </page>

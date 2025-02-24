@@ -8,6 +8,7 @@
                 <sheet>
                     <group>
                         <field name="type"/>
+                        <field name="sous_type_id"/>
                         <field name="name"/>
                     </group>
                 </sheet>
@@ -21,13 +22,14 @@
         <field name="arch" type="xml">
             <list string="Corps des administrations publiques">
                 <field name="type"/>
+                <field name="sous_type_id"/>
                 <field name="name"/>
             </list>
         </field>
      </record>
 
      <record id="open_view_corps_form" model="ir.actions.act_window">
-        <field name="name">Corps des administrations publiques</field>
+        <field name="name">Corps</field>
         <field name="res_model">hr.employee.corps</field>
         <field name="view_mode">list,form</field>
         <field name="help" type="html">

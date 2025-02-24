@@ -8,30 +8,35 @@
                 <sheet>
                     <group>
                         <field name="type"/>
+                        <field name="sous_type_id"/>
                         <field name="corps_id"/>
                         <field name="name"/>
                         <field name="categorie_administrative_id"/>
+                        <field name="age_retraite"/>
                     </group>
                 </sheet>
             </form>
         </field>
-     </record>
+    </record>
 
-     <record id="view_employee_grade_list" model="ir.ui.view">
+    <record id="view_employee_grade_list" model="ir.ui.view">
         <field name="name">hr.employee.grade.list</field>
         <field name="model">hr.employee.grade</field>
         <field name="arch" type="xml">
             <list string="Grades de la fonction publique">
                         <field name="type"/>
+                        <field name="sous_type_id"/>
                         <field name="corps_id"/>
                         <field name="name"/>
-                        <field name="categorie_administrative_id"/>        
+                        <field name="categorie_administrative_id"/>
+                        <field name="age_retraite"/>
+        
             </list>
         </field>
-     </record>
+    </record>
 
-     <record id="open_view_grade_form" model="ir.actions.act_window">
-        <field name="name">Grades de la fonction publique</field>
+    <record id="open_view_grade_form" model="ir.actions.act_window">
+        <field name="name">Grades </field>
         <field name="res_model">hr.employee.grade</field>
         <field name="view_mode">list,form</field>
         <field name="help" type="html">
@@ -42,5 +47,5 @@
                 Use grade to categorize your Employees.
             </p>
         </field>
-     </record>
+    </record>
  </odoo>
