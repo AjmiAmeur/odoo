@@ -4,7 +4,7 @@ from odoo.exceptions import ValidationError
 class HrEmployeeGrade(models.Model):
     _name = 'hr.employee.grade'
     _description = "Grades de la fonction publique "
-    _order = "type,corps_id,categorie_administrative_id,name"
+    _order = "type,sous_type_id,corps_id,categorie_administrative_id,name"
 
     name = fields.Char(string='Nom du grade', required=True,translate=True)
     type = fields.Selection([
@@ -15,7 +15,7 @@ class HrEmployeeGrade(models.Model):
         ('student', 'Etudiant'),
         ('trainee', 'Stagiaire'),  
         ('other', 'Autre'),
-        ], string="Types d'employé", default='employee', required=True, groups="hr.group_hr_user",
+        ], string="Type d'employé", default='employee', required=True, groups="hr.group_hr_user",
         help="Administratif/Enseignant/Visiteur/vacataire/Etudiant/Stagiaire/Autre")
     
     sous_type_id  = fields.Many2one('hr.sous.type', string="Sous-Type", required=True,domain="[('type', '=?', type)]",groups="hr.group_hr_user")

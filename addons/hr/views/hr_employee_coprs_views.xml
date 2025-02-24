@@ -27,11 +27,37 @@
             </list>
         </field>
      </record>
+    <record id="view_employee_corps_search" model="ir.ui.view">
+        <field name="name">hr.employee.corps.search</field>
+        <field name="model">hr.employee.corps</field>
+        <field name="arch" type="xml">
+            <search string="rechercher Corps">
+                <field name="type"/>
+                <field name="sous_type_id"/>
+                <field name="name"/>
 
+                <searchpanel>
+                        <field name="type" icon="fa-users" enable_counters="1"/>
+                        <field name="sous_type_id" icon="fa-user-md" enable_counters="1"/>
+                </searchpanel>
+                <filter name="Type_IATOS" string="IATOS" domain="[('type', '=', 'employee')]"/>
+                <filter name="Type_Enseignant" string="Enseignant" domain="[('type', '=', 'enseignant')]"/>
+                <filter name="Type_visiteur" string="Visiteur" domain="[('type', '=', 'visiteur')]"/>
+                <filter name="Type_vacataire" string="Vacataire" domain="[('type', '=', 'vacataire')]"/>
+                <filter name="Type_Etudiant" string="Etudiant" domain="[('type', '=', 'student')]"/>
+
+                <group expand="0" string="Group By">
+                        <filter name="group_type" string="Type" domain="[]" context="{'group_by': 'type'}"/>
+                        <filter name="group_sous_type" string="Sous-Type" domain="[]" context="{'group_by': 'sous_type_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
      <record id="open_view_corps_form" model="ir.actions.act_window">
         <field name="name">Corps</field>
         <field name="res_model">hr.employee.corps</field>
         <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_employee_corps_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No Corps found ! Let's create one

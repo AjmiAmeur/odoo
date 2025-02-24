@@ -7,9 +7,7 @@ from odoo import models, fields
 class HrEmployeeCorps(models.Model):
     _name = 'hr.employee.corps'
     _description = 'Corps des administrations publiques'
-    _order = "name"
-
-
+    _order = "type,sous_type_id,name"
     
     def _get_default_color(self):
         return randint(1, 11)
