@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from random import randint
-from odoo import models, fields
+from odoo import api, models, fields
 
 class HrEmployeeCorps(models.Model):
     _name = 'hr.employee.corps'
@@ -26,6 +26,13 @@ class HrEmployeeCorps(models.Model):
         ], string="Types d'employé", default='employee', required=True, groups="hr.group_hr_user",
         help="Administratif/Enseignant/Visiteur/vacataire/Etudiant/Stagiaire/Autre")
     sous_type_id  = fields.Many2one('hr.sous.type', string="Sous-Type", required=True,domain="[('type', '=?', type)]",groups="hr.group_hr_user")
+
+    name_ar = fields.Char(string="Corps en Arabe", compute='_compute_name_ar')
+
+    @api.depends('name')
+    def _compute_name_ar(self):
+        for record in self:
+            record.name_ar = record.with_context(lang='ar_001').name
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "Corps deja existe!"),
