@@ -72,12 +72,6 @@ HR_WRITABLE_FIELDS = [
     'study_school',
     'private_lang',
     'employee_type',
-    'date_entree_administration',
-    'date_entree_etablissement',
-    'date_nomination_grade',
-    'date_titularisation',
-    'titularisation',
-
 ]
 
 
