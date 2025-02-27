@@ -178,18 +178,26 @@ class HrEmployeePrivate(models.Model):
         ('temporaire', 'Temporaire'),
     ], string='Titularisation', groups="hr.group_hr_user", default='titulaire', tracking=True)
     position_id  = fields.Many2one('hr.employee.position', string="Position administrative", groups="hr.group_hr_user", tracking=True)
-
+    #sous_type
     sous_type_id  = fields.Many2one('hr.sous.type', string="Sous-Type", groups="hr.group_hr_user", related='grade_id.sous_type_id', store=True, readonly=True, ondelete='restrict')
     sous_type_name = fields.Char(string="Sous-Type", related='sous_type_id.name', store=False)
-
+    #corps
     corps_id  = fields.Many2one('hr.employee.corps', string="corps", groups="hr.group_hr_user", related='grade_id.corps_id', store=True, readonly=True, ondelete='restrict')
     corps_name = fields.Char(string="corps", related='corps_id.name', store=False)
-    
+     # categorie_administrative
     categorie_administrative_id  = fields.Many2one('hr.categorie.administrative', string="Catégorie administrative", groups="hr.group_hr_user",related='grade_id.categorie_administrative_id', store=True, readonly=True, ondelete='restrict' )
     categorie_administrative_name = fields.Char(string="categorie administrative", related='categorie_administrative_id.name', store=False)
-
+    # grade
     grade_id  = fields.Many2one('hr.employee.grade', string="Grade ", groups="hr.group_hr_user", tracking=True)
-
+    # specialite
+    specialite_id  = fields.Many2one('hr.domaine.discipline.specialite', string="Spécialité", groups="hr.group_hr_user",store=True, tracking=True)
+    specialite_name = fields.Char(string="Spécialité", related='specialite_id.name', store=False)
+    # discipline
+    discipline_id  = fields.Many2one('hr.domaine.discipline', string="Discipline", groups="hr.group_hr_user", related='specialite_id.discipline_id', store=True, readonly=True, ondelete='restrict')
+    discipline_name = fields.Char(string="Discipline", related='discipline_id.name', store=False)
+    # domaine
+    domaine_id  = fields.Many2one('hr.domaine', string="Domaine", groups="hr.group_hr_user", related='specialite_id.domaine_id', store=True, readonly=True, ondelete='restrict')
+    domaine_name = fields.Char(string="Domaine", related='domaine_id.name', store=False)
     # properties
     employee_properties = fields.Properties('Properties', definition='company_id.employee_properties_definition', precompute=False, groups="hr.group_hr_user")
 
