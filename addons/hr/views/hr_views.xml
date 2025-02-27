@@ -81,8 +81,20 @@
                 id="menu_hr_work_location_tree"
                 action="hr_work_location_action"
                 parent="menu_config_employee"
-                sequence="5"
+                sequence="7"
                 groups="group_hr_user"/>
+            <menuitem
+                id="menu_hr_domaine_discipline_tree"
+                action="open_view_domaine_discipline_form"
+                parent="menu_config_employee"
+                sequence="5"
+                groups="group_hr_user"/>        
+            <menuitem
+                id="menu_hr_domaine_discipline_specialite_tree"
+                action="open_view_domaine_discipline_specialite_form"
+                parent="menu_config_employee"
+                sequence="6"
+                groups="group_hr_user"/>        
             <menuitem
                 id="menu_hr_employee_grade_tree"
                 action="open_view_grade_form"
@@ -113,7 +125,7 @@
                 id="menu_hr_departure_reason_tree"
                 action="hr_departure_reason_action"
                 parent="menu_config_employee"
-                sequence="7"
+                sequence="8"
                 groups="group_hr_user"/>
 
             <menuitem
@@ -122,7 +134,7 @@
                 action="open_view_categ_form"
                 parent="menu_config_employee"
                 groups="base.group_no_one"
-                sequence="10"/>
+                sequence="12"/>
 
             <menuitem
                 id="menu_config_recruitment"

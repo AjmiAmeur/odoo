@@ -38,6 +38,8 @@
         'views/hr_categorie_administrative_views.xml',
         'views/hr_employee_coprs_views.xml',
         'views/hr_employee_grade_views.xml',
+        'views/hr_domaine_discipline_views.xml',
+        'views/hr_domaine_discipline_specialite_views.xml',
         'views/hr_views.xml',
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',

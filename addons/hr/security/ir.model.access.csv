@@ -15,6 +15,12 @@ access_hr_grade_user,hr.grade.user,model_hr_employee_grade,group_hr_user,1,1,1,1
 access_hr_grade_employee,hr.grade.employee,model_hr_employee_grade,base.group_user,1,0,0,0
 access_hr_categorie_administrative_user,hr.categorie.administrative.user,model_hr_categorie_administrative,group_hr_user,1,1,1,1
 access_hr_categorie_administrative_employee,hr.categorie.administrative.employee,model_hr_categorie_administrative,base.group_user,1,0,0,0
+access_hr_domaine_user,hr.domaine.user,model_hr_domaine,group_hr_user,1,1,1,1
+access_hr_domaine_employee,hr.domaine.employee,model_hr_domaine,base.group_user,1,0,0,0
+access_hr_domaine_discipline_user,hr.domaine.discipline.user,model_hr_domaine_discipline,group_hr_user,1,1,1,1
+access_hr_domaine_discipline_employee,hr.domaine.discipline.employee,model_hr_domaine_discipline,base.group_user,1,0,0,0
+access_hr_domaine_discipline_specialite_user,hr.domaine.discipline.specialite.user,model_hr_domaine_discipline_specialite,group_hr_user,1,1,1,1
+access_hr_domaine_discipline_specialite_employee,hr.domaine.discipline.specialiteline.employee,model_hr_domaine_discipline_specialite,base.group_user,1,0,0,0
 access_hr_sous_type_user,hr.sous.type.user,model_hr_sous_type,group_hr_user,1,1,1,1
 access_hr_sous_type_employee,hr.sous.type.employee,model_hr_sous_type,base.group_user,1,0,0,0
 access_hr_job_user,hr.job user,model_hr_job,group_hr_user,1,1,1,1

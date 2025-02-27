@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_domaine_discipline_form" model="ir.ui.view">
+        <field name="name">hr.domaine.discipline.form</field>
+        <field name="model">hr.domaine.discipline</field>
+        <field name="arch" type="xml">
+            <form string="discipline académique par domaine">
+                <sheet>
+                    <group>
+                        <field name="domaine_id"/>
+                        <field name="code"/>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+     </record>
+
+     <record id="view_domaine_discipline_list" model="ir.ui.view">
+        <field name="name">hr.domaine.discipline.list</field>
+        <field name="model">hr.domaine.discipline</field>
+        <field name="arch" type="xml">
+            <list string="Liste des disciplines académique par domaine">
+                    <field name="domaine_id"/>
+                    <field name="code"/>
+                    <field name="name"/>
+            </list>
+        </field>
+     </record>
+    <record id="view_domaine_discipline_search" model="ir.ui.view">
+        <field name="name">hr.domaine.discipline.search</field>
+        <field name="model">hr.domaine.discipline</field>
+        <field name="arch" type="xml">
+            <search string="rechercher Discipline">
+                <field name="name"/>
+                <field name="name" string="الإختصاص" context="{'lang': 'ar_001'}"/>
+                <field name="domaine_id"/>
+                <field name="code"/>
+                <searchpanel>
+                        <field name="domaine_id" icon="fa-user-md" enable_counters="1"/>
+                </searchpanel>
+                
+
+                <group expand="0" string="Group By">
+                        <filter name="group_domaine" string="Domaine" domain="[]" context="{'group_by': 'domaine_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+     <record id="open_view_domaine_discipline_form" model="ir.actions.act_window">
+        <field name="name">Discipline</field>
+        <field name="res_model">hr.domaine.discipline</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_domaine_discipline_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Discipline found ! Let's create one
+            </p>
+            <p>
+                Use discipline to categorize your Employees.
+            </p>
+        </field>
+     </record>
+ </odoo>
