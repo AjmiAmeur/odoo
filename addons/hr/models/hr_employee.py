@@ -119,7 +119,7 @@ class HrEmployeePrivate(models.Model):
         ('doctor', 'Doctor'),
         ('other', 'Other'),
     ], 'Certificate Level', groups="hr.group_hr_user", tracking=True)
-    study_field = fields.Char("Field of Study", groups="hr.group_hr_user", tracking=True)
+    study_field = fields.Char("Field of Study",compute="_compute_study_field", groups="hr.group_hr_user", store=True, readonly=False)
     study_school = fields.Char("School", groups="hr.group_hr_user", tracking=True)
     emergency_contact = fields.Char("Contact Name", groups="hr.group_hr_user", tracking=True)
     emergency_phone = fields.Char("Contact Phone", groups="hr.group_hr_user", tracking=True)
@@ -229,6 +229,10 @@ class HrEmployeePrivate(models.Model):
         ('barcode_uniq', 'unique (barcode)', "The Badge ID must be unique, this one is already assigned to another employee."),
         ('user_uniq', 'unique (user_id, company_id)', "A user cannot be linked to multiple employees in the same company.")
     ]
+    @api.depends('specialite_id')
+    def _compute_study_field(self):
+        for employee in self.filtered('specialite_id'):
+            employee.study_field = employee.specialite_id.name
 
     @api.model
     def check_field_access_rights(self, operation, field_names):
