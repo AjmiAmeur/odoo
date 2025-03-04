@@ -190,6 +190,7 @@
                                         <field name="passport_id"/>
                                         <field name="gender"/>
                                         <field name="birthday"/>
+                                         <field name="age"/>
                                         <field name="place_of_birth"/>
                                         <field name="country_of_birth"/>
                                     </group>

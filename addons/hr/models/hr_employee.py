@@ -91,6 +91,8 @@ class HrEmployeePrivate(models.Model):
     children = fields.Integer(string='Number of Dependent Children', groups="hr.group_hr_user", tracking=True)
     place_of_birth = fields.Char('Place of Birth', groups="hr.group_hr_user", tracking=True)
     country_of_birth = fields.Many2one('res.country', string="Country of Birth", default= _default_country_TN ,groups="hr.group_hr_user", tracking=True)
+    age = fields.Integer(compute="_compute_age", groups="hr.group_hr_user")
+
     birthday = fields.Date('Date of Birth', groups="hr.group_hr_user", tracking=True)
     # ssnid-> CIN
     ssnid = fields.Char(string='CIN', help="Carte d'identité nationale",size=8, groups="hr.group_hr_user", tracking=True)
@@ -232,7 +234,7 @@ class HrEmployeePrivate(models.Model):
     @api.depends('specialite_id')
     def _compute_study_field(self):
         for employee in self.filtered('specialite_id'):
-            employee.study_field = employee.specialite_id.name
+            employee.study_field =  employee.discipline_id.name + '/' + employee.specialite_id.name
 
     @api.model
     def check_field_access_rights(self, operation, field_names):
@@ -749,6 +751,10 @@ class HrEmployeePrivate(models.Model):
             target_date = fields.Date.context_today(self.env.user)
         return relativedelta(target_date, self.birthday).years if self.birthday else 0
 
+    @api.depends("birthday")
+    def _compute_age(self):
+        for record in self:
+            record.age = record._get_age()
     # ---------------------------------------------------------
     # Messaging
     # ---------------------------------------------------------
