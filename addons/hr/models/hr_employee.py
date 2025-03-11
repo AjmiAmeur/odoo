@@ -234,7 +234,8 @@ class HrEmployeePrivate(models.Model):
 
     _sql_constraints = [
         ('barcode_uniq', 'unique (barcode)', "The Badge ID must be unique, this one is already assigned to another employee."),
-        ('user_uniq', 'unique (user_id, company_id)', "A user cannot be linked to multiple employees in the same company.")
+        ('user_uniq', 'unique (user_id, company_id)', "A user cannot be linked to multiple employees in the same company."),
+        ('matricule_uniq', 'unique (identification_id)', "Le matricule doit être unique. Veuillez saisir un autre matricule..")
     ]
     @api.depends('specialite_id')
     def _compute_study_field(self):
@@ -289,7 +290,9 @@ class HrEmployeePrivate(models.Model):
         for employee in self:
             name = employee.name.replace(' ', '_') + '_' if employee.name else ''
             permit_no = '_' + employee.permit_no if employee.permit_no else ''
-            employee.work_permit_name = "%swork_permit%s" % (name, permit_no)
+            # employee.work_permit_name = "%swork_permit%s" % (name, permit_no)
+            employee.work_permit_name = "%sDossier%s" % (name, permit_no)
+
 
     @api.depends('distance_home_work', 'distance_home_work_unit')
     def _compute_km_home_work(self):
@@ -474,6 +477,8 @@ class HrEmployeePrivate(models.Model):
 
         return res
 
+
+
     @api.constrains('pin')
     def _verify_pin(self):
         for employee in self:
@@ -492,7 +497,17 @@ class HrEmployeePrivate(models.Model):
         # By default, an Social Security Number is always valid, but each localization
         # may want to add its own constraints
         pass
+    @api.constrains('identification_id')
+    def _check_identification_id(self):
+        for employee in self:
+            if not employee.identification_id.isdigit() or len(employee.identification_id) != 10:
+                    raise ValidationError("Le matricule doit être composé de 10 chiffres.")                
 
+    @api.constrains('ssnid')
+    def _check_ssnid(self):
+        for employee in self:
+            if not employee.ssnid.isdigit() or len(employee.ssnid) != 8:
+                    raise ValidationError("Le numéro de CIN saisie doit contenir exactement 8 chiffres.")   
     @api.onchange('user_id')
     def _onchange_user(self):
         self.update(self._sync_user(self.user_id, (bool(self.image_1920))))
