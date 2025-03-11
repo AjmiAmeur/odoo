@@ -168,7 +168,7 @@
                                 <field name="spouse_birthdate" invisible="marital not in ['married', 'cohabitant']" readonly="not can_edit"/>
                             </group>
                             <group string="Education">
-                                <field name="certificate" readonly="not can_edit"/>
+                                <!-- <field name="certificate" readonly="not can_edit"/> -->
                                 <field name="study_field" readonly="not can_edit"/>
                                 <field name="study_school" readonly="not can_edit"/>
                             </group>

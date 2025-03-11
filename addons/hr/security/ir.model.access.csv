@@ -15,6 +15,8 @@ access_hr_grade_user,hr.grade.user,model_hr_employee_grade,group_hr_user,1,1,1,1
 access_hr_grade_employee,hr.grade.employee,model_hr_employee_grade,base.group_user,1,0,0,0
 access_hr_categorie_administrative_user,hr.categorie.administrative.user,model_hr_categorie_administrative,group_hr_user,1,1,1,1
 access_hr_categorie_administrative_employee,hr.categorie.administrative.employee,model_hr_categorie_administrative,base.group_user,1,0,0,0
+access_hr_diplome_user,hr.diplome.user,model_hr_diplome,group_hr_user,1,1,1,1
+access_hr_diplome_employee,hr.diplome.employee,model_hr_diplome,base.group_user,1,0,0,0
 access_hr_domaine_user,hr.domaine.user,model_hr_domaine,group_hr_user,1,1,1,1
 access_hr_domaine_employee,hr.domaine.employee,model_hr_domaine,base.group_user,1,0,0,0
 access_hr_domaine_discipline_user,hr.domaine.discipline.user,model_hr_domaine_discipline,group_hr_user,1,1,1,1
