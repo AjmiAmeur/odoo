@@ -35,7 +35,7 @@ msgid ""
 msgstr ""
 "\n"
 "    <strong>Nhắc nhở</strong><br/>\n"
-"    Bạn chưa cập nhật tiến trình cho mục tiêu <t t-out=\"object.definition_id.name or ''\"/> (hiện đã đạt được <t t-out=\"object.completeness or ''\"/>%) trong ít nhất <t t-out=\"object.remind_update_delay or ''\"/> ngày. Đừng quên tiếp tục nhé.\n"
+"    Bạn chưa cập nhật tiến độ cho mục tiêu <t t-out=\"object.definition_id.name or ''\"/> (hiện đã đạt được <t t-out=\"object.completeness or ''\"/>%) trong ít nhất <t t-out=\"object.remind_update_delay or ''\"/> ngày. Đừng quên tiếp tục nhé.\n"
 "    <br/><br/>\n"
 "    Cảm ơn bạn!\n"
 "    <t t-if=\"object.challenge_id.manager_id.signature\">\n"
@@ -584,7 +584,7 @@ msgstr ""
 "                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" bgcolor=\"#fff\" style=\"background-color:#fff;\">\n"
 "                    <tr><td style=\"padding: 15px;\">\n"
 "                        <t t-if=\"object.visibility_mode == 'personal'\">\n"
-"                            <span style=\"color:#666666;font-size:13px;\">Đây là tiến trình của bạn trong thử thách <strong t-out=\"object.name or ''\"/> này.</span>\n"
+"                            <span style=\"color:#666666;font-size:13px;\">Đây là tiến độ của bạn trong thử thách <strong t-out=\"object.name or ''\"/> này.</span>\n"
 "                            <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:20px;\">\n"
 "                                <tr>\n"
 "                                    <td align=\"center\">\n"
@@ -951,7 +951,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__batch_mode
 msgid "Batch Mode"
-msgstr "Chế độ hàng loạt"
+msgstr "Chế độ theo lô"
 
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_idea
@@ -1278,7 +1278,7 @@ msgstr "Hiển thị"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__batch_distinctive_field
 msgid "Distinctive field for batch user"
-msgstr "Trường đặc biệt cho người dùng hàng loạt"
+msgstr "Trường đặc biệt cho người dùng theo lô"
 
 #. module: gamification
 #: model:gamification.karma.rank,name:gamification.rank_doctor
@@ -1295,7 +1295,7 @@ msgstr ""
 "Tên miền để lọc bản ghi. Quy tắc chung, không phụ thuộc vào người dùng, ví "
 "dụ: [('trạng thái', '=', 'xong')]. Biểu thức có thể chứa tham chiếu đến "
 "'người dùng' là bản ghi duyệt của người dùng hiện tại nếu không ở chế độ "
-"hàng loạt."
+"theo lô."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__state__done
@@ -1330,7 +1330,7 @@ msgstr "Đánh giá biểu thức theo đợt thay vì một lần cho mỗi ng�
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__batch_user_expression
 msgid "Evaluated expression for batch mode"
-msgstr "Biểu thức đánh giá cho chế độ hàng loạt"
+msgstr "Biểu thức đánh giá cho chế độ theo lô"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__rule_auth__everyone
@@ -1716,8 +1716,8 @@ msgid ""
 "In batch mode, the domain is evaluated globally. If enabled, do not use "
 "keyword 'user' in above filter domain."
 msgstr ""
-"Trong chế độ hàng loạt, điều kiện được đánh giá trên toàn hệ thống. Nếu được"
-" bật, không sử dụng từ khóa 'người dùng' trong miền bộ lọc ở trên."
+"Trong chế độ theo lô, điều kiện được đánh giá trên toàn hệ thống. Nếu được "
+"bật, không sử dụng từ khóa 'người dùng' trong miền bộ lọc ở trên."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__batch_distinctive_field
@@ -1725,7 +1725,7 @@ msgid ""
 "In batch mode, this indicates which field distinguishes one user from the "
 "other, e.g. user_id, partner_id..."
 msgstr ""
-"Trong chế độ hàng loạt, đây là yếu tố chỉ ra trường nào phân biệt các người "
+"Trong chế độ theo lô, đây là yếu tố chỉ ra trường nào phân biệt các người "
 "dùng, ví dụ: user_id, partner_id, v.v."
 
 #. module: gamification
@@ -2317,7 +2317,7 @@ msgstr "Người phụ trách"
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
 msgid "Retrieving progress for personal challenge without user information"
-msgstr "Lấy tiến trình cho thử thách cá nhân mà không có thông tin người dùng"
+msgstr "Lấy tiến độ cho thử thách cá nhân mà không có thông tin người dùng"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view

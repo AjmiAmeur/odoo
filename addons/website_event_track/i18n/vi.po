@@ -250,7 +250,7 @@ msgid ""
 msgstr ""
 "Trạng thái ở kanban của một phần nội dung cho biết tình huống đặc biệt đang xảy ra:\n"
 " * Màu xám là tình huống mặc định\n"
-" * Màu đỏ nghĩa là có trở ngại đối với tiến trình của nội dung\n"
+" * Màu đỏ nghĩa là có trở ngại đối với tiến độ của nội dung\n"
 " * Màu xanh nghĩa là nội dung đã sẵn sàng để chuyển sang giai đoạn tiếp theo"
 
 #. module: website_event_track
@@ -702,7 +702,7 @@ msgid ""
 msgstr ""
 "Xác định các bước sẽ được sử dụng trong sự kiện, từ khi\n"
 "            tạo tới khi đóng nội dung.\n"
-"            Bạn sẽ sử dụng các giai đoạn để theo dõi tiến trình\n"
+"            Bạn sẽ sử dụng các giai đoạn để theo dõi tiến độ\n"
 "            giải quyết một phần nội dung trong sự kiện. "
 
 #. module: website_event_track
@@ -1870,7 +1870,7 @@ msgstr "Giai đoạn"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
 msgid "Stage Description and Tooltips"
-msgstr "Chú giải và mô tả giai đoạn"
+msgstr "Chú thích và mô tả giai đoạn"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__name

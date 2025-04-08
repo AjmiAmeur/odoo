@@ -81,10 +81,12 @@ export class PartnerList extends Component {
         if (exactMatches.length > 0) {
             return exactMatches;
         }
+        const numberString = searchWord.replace(/[+\s()-]/g, "");
+        const isSearchWordNumber = /^[0-9]+$/.test(numberString);
 
         const availablePartners = searchWord
             ? partners.filter((p) =>
-                  unaccent(p.searchString, false).toLowerCase().includes(searchWord)
+                  unaccent(p.searchString).includes(isSearchWordNumber ? numberString : searchWord)
               )
             : partners
                   .slice(0, 1000)
@@ -126,7 +128,7 @@ export class PartnerList extends Component {
             const search_fields = [
                 "name",
                 "parent_name",
-                "phone_mobile_search",
+                ...this.getPhoneSearchTerms(),
                 "email",
                 "barcode",
                 "street",
@@ -148,5 +150,9 @@ export class PartnerList extends Component {
         });
 
         return result;
+    }
+
+    getPhoneSearchTerms() {
+        return ["phone", "mobile"];
     }
 }

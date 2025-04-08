@@ -714,3 +714,67 @@ class TestCreatePicking(common.TestProductCommon):
 
         self.assertEqual(po.order_line.qty_received, 8)
         self.assertEqual(push_pick.partner_id, po.partner_id)
+
+    def test_create_return_exchange_with_no_picking_origin(self):
+        """ Test that we can create a return exchange with no picking origin """
+
+        self.product_id_2.seller_ids = [(0, 0, {
+            'partner_id': self.partner_id.id,
+            'price': 10,
+        })]
+        stock_picking = self.env['stock.picking'].create({
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.env.ref('stock.stock_location_stock').id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'move_ids': [(0, 0, {
+                'name': 'outgoing_shipment_avg_move',
+                'product_id': self.product_id_2.id,
+                'product_uom_qty': 10,
+                'product_uom': self.product_id_2.uom_id.id,
+                'location_id': self.env.ref('stock.stock_location_suppliers').id,
+                'location_dest_id': self.env.ref('stock.stock_location_stock').id,
+            })]
+        })
+        stock_picking.button_validate()
+
+        stock_return_picking = self.env['stock.return.picking'].with_context(
+            active_ids=stock_picking.ids, active_id=stock_picking.ids[0], active_model='stock.picking').create({})
+
+        stock_return_picking.product_return_moves.quantity = 1.0
+        res = stock_return_picking.action_create_exchanges()
+        exchange_return_picking = self.env['stock.picking'].browse(res['res_id'])
+
+        self.assertTrue(exchange_return_picking)
+        self.assertEqual(exchange_return_picking.origin, 'Return of ' + stock_picking.name)
+
+    def test_po_with_return_for_exchange_shows_3_transfers(self):
+        po = self.env['purchase.order'].create(self.po_vals)
+        po.button_confirm()
+
+        stock_picking = po.picking_ids
+        stock_picking.button_validate()
+
+        return_picking_wizard = self.env['stock.return.picking'].with_context(
+            active_ids=stock_picking.ids, active_id=stock_picking.id, active_model='stock.picking'
+        ).create({})
+
+        return_picking_wizard.product_return_moves.quantity = 1.0
+        return_picking_wizard.action_create_exchanges()
+
+        self.assertEqual(
+            po.incoming_picking_count, 3,
+            'All 3 transfers (orig, return, exchange) should be associated with the PO.'
+        )
+
+        picking_type_out = self.env.ref('stock.picking_type_out')
+        picking_type_in = self.env.ref('stock.picking_type_in')
+
+        # Orig: receipt for 5 items
+        self.assertEqual(po.picking_ids[0].picking_type_id, picking_type_in)
+        self.assertEqual(po.picking_ids[0].move_ids.quantity, 5)
+        # Return: delivery for 1 item
+        self.assertEqual(po.picking_ids[1].picking_type_id, picking_type_out)
+        self.assertEqual(po.picking_ids[1].move_ids.quantity, 1)
+        # Exchange: receipt for 1 item
+        self.assertEqual(po.picking_ids[2].picking_type_id, picking_type_in)
+        self.assertEqual(po.picking_ids[2].move_ids.quantity, 1)

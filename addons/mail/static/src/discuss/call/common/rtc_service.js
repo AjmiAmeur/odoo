@@ -210,7 +210,8 @@ export class Rtc extends Record {
     timeouts = new Map();
     /** @type {Map<number, number>} timeoutId by sessionId for download pausing delay */
     downloadTimeouts = new Map();
-    iceServers = Record.attr(DEFAULT_ICE_SERVERS, {
+    /** @type {{urls: string[]}[]} */
+    iceServers = Record.attr(undefined, {
         compute() {
             return this.iceServers ? this.iceServers : DEFAULT_ICE_SERVERS;
         },
@@ -705,8 +706,8 @@ export class Rtc extends Record {
                     return;
                 }
                 for (const [id, info] of Object.entries(payload)) {
-                    const session = this.store.RtcSession.get(Number(id));
-                    if (!session) {
+                    const session = await this.store.RtcSession.getWhenReady(Number(id));
+                    if (!session || !this.state.channel) {
                         return;
                     }
                     // `isRaisingHand` is turned into the Date `raisingHand`
@@ -718,8 +719,8 @@ export class Rtc extends Record {
             case "track":
                 {
                     const { sessionId, type, track, active } = payload;
-                    const session = this.store.RtcSession.get(sessionId);
-                    if (!session) {
+                    const session = await this.store.RtcSession.getWhenReady(sessionId);
+                    if (!session || !this.state.channel) {
                         this.log(
                             this.selfSession,
                             `track received for unknown session ${sessionId} (${this.state.connectionType})`
@@ -899,8 +900,8 @@ export class Rtc extends Record {
         if (camera) {
             await this.toggleVideo("camera");
         }
-        await this.resetAudioTrack({ force: audio });
         await this._initConnection();
+        await this.resetAudioTrack({ force: audio });
         if (!this.state.channel?.id) {
             return;
         }
