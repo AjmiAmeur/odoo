@@ -96,6 +96,8 @@ class HrEmployeePrivate(models.Model):
     birthday = fields.Date('Date of Birth', groups="hr.group_hr_user", tracking=True)
     # ssnid-> CIN
     ssnid = fields.Char(string='CIN', help="Carte d'identité nationale",size=8, groups="hr.group_hr_user", tracking=True)
+    date_cin = fields.Date(string="Délivrée le",help="C.I.N. Délivrée le", groups="hr.group_hr_user", tracking=True)
+
     sinid = fields.Char('SIN No', help='Social Insurance Number', groups="hr.group_hr_user", tracking=True)
     # identification_id-> Matricule
     identification_id = fields.Char(string='Matricule',help="Identifiant unique",size=10, groups="hr.group_hr_user", tracking=True)
@@ -205,6 +207,9 @@ class HrEmployeePrivate(models.Model):
     # domaine
     domaine_id  = fields.Many2one('hr.domaine', string="Domaine", groups="hr.group_hr_user", related='specialite_id.domaine_id', store=True, readonly=True, ondelete='restrict')
     domaine_name = fields.Char(string="Domaine", related='domaine_id.name', store=False)
+    observation = fields.Text(string="Observations", groups="hr.group_hr_user")
+
+
     # properties
     employee_properties = fields.Properties('Properties', definition='company_id.employee_properties_definition', precompute=False, groups="hr.group_hr_user")
 

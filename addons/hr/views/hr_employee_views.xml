@@ -7,7 +7,8 @@
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
                 <search string="Employees">
-                    <field name="name" string="Employee" filter_domain="['|', ('work_email', 'ilike', self), ('name', 'ilike', self)]"/>
+                    <field name="name" string="Employee" filter_domain="['|' ,'|','|', '|', '|', ('ssnid', 'ilike', self), ('name', 'ilike', self), ('name_ar', 'ilike', self), ('identification_id', 'ilike', self), ('work_email', 'ilike', self), ('work_phone', 'ilike', self)]"/>
+
                     <field name="department_id"/>
                     <searchpanel>
                         <field name="company_id" groups="base.group_multi_company" icon="fa-building" enable_counters="1"/>
@@ -109,7 +110,11 @@
                                 <field name="parent_id" widget="many2one_avatar_user"/>
                                 <field name="coach_id" widget="many2one_avatar_user" invisible="1"/>
                             </group>
-                        </group>
+                        </group>    
+                        <h3 class="o_field_label">Observations</h3>
+                        
+                        <field name="observation"  placeholder="Observations" />
+
                         <field name="employee_properties" columns="2"/>
                         <notebook>
                             <page name="hr_administrative" string="Données administratives" groups="hr.group_hr_user">
@@ -187,7 +192,7 @@
                                     <group string="Citizenship">
                                         <field name="country_id" options='{"no_open": True, "no_create": True}'/>
                                         <field name="ssnid" placeholder="CIN" />
-                                        <field name="passport_id"/>
+                                        <field name="date_cin"/>
                                         <field name="gender"/>
                                         <field name="birthday"/>
                                          <field name="age"/>
