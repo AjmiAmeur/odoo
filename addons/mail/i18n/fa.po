@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:36+0000\n"
+"POT-Creation-Date: 2025-05-14 20:47+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Naser mars, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
@@ -38,13 +38,8 @@ msgid ""
 "                updates, you can however add them below and Odoo will let them go through.\n"
 "            </p>"
 msgstr ""
-"<p class=\"o_view_nocontent_smiling_face\"> آدرس‌ها را به لیست مجاز اضافه "
-"کنید </p><p> برای حفاظت شما از اسپم و حلقه‌های پاسخ، اودو به‌طور خودکار "
-"ایمیل‌هایی را که به گذرگاه شما می‌آیند پس از رسیدن به محدودیت "
-"<b>%(threshold)i</b> ایمیل در هر <b>%(minutes)i</b> دقیقه مسدود می‌کند. اگر "
-"برخی آدرس‌ها وجود دارند که نیاز دارید از آن‌ها به‌طور بسیار مکرر به‌روزرسانی"
-" دریافت کنید، می‌توانید آن‌ها را در زیر اضافه کنید و اودو اجازه عبور به "
-"آن‌ها را می‌دهد. </p>"
+"\n"
+"<p class=\"o_view_nocontent_smiling_face\"> آدرس‌ها را به لیست مجاز اضافه کنید </p><p> برای حفاظت شما از اسپم و حلقه‌های پاسخ، اودو به‌طور خودکار ایمیل‌هایی را که به گذرگاه شما می‌آیند پس از رسیدن به محدودیت <b>%(threshold)i</b> ایمیل در هر <b>%(minutes)i</b> دقیقه مسدود می‌کند. اگر برخی آدرس‌ها وجود دارند که نیاز دارید از آن‌ها به‌طور بسیار مکرر به‌روزرسانی دریافت کنید، می‌توانید آن‌ها را در زیر اضافه کنید و اودو اجازه عبور به آن‌ها را می‌دهد. </p>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_document_unfollowed
@@ -103,13 +98,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_reaction_list.js:0
 msgid "%(emoji)s reacted by %(person)s"
-msgstr ""
+msgstr "%(emoji)s واکنش توسط %(person)s"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_reaction_list.js:0
 msgid "%(emoji)s reacted by %(person1)s and %(person2)s"
-msgstr ""
+msgstr "%(emoji)s واکنش توسط %(person1)s و %(person2)s"
 
 #. module: mail
 #. odoo-javascript
@@ -198,7 +193,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/base_recipients_list.js:0
 msgid "%(recipientCount)s more"
-msgstr ""
+msgstr "%(recipientCount)s بیشتر"
 
 #. module: mail
 #. odoo-javascript
@@ -213,6 +208,8 @@ msgid ""
 "%(user)s started a thread: %(goto)s%(thread_name)s%(goto_end)s. "
 "%(goto_all)sSee all threads%(goto_all_end)s."
 msgstr ""
+"%(user)s یک تاپیک ایجاد شده: %(goto)s%(thread_name)s%(goto_end)s. "
+"%(goto_all)sدیدن همه تاپیک ها%(goto_all_end)s."
 
 #. module: mail
 #. odoo-javascript
@@ -273,7 +270,7 @@ msgstr "%s پیام‌ها پیدا شد"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "%s new messages"
-msgstr ""
+msgstr "%s پیام جدید"
 
 #. module: mail
 #. odoo-javascript
@@ -342,14 +339,16 @@ msgstr "(اول محول شده به"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_invite
 msgid ") added you as a follower of this"
-msgstr ""
+msgstr ") شما را به عنوان دنبال کننده این اضافه کرد"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 msgid ""
 ",\n"
 "    <br/><br/>"
-msgstr "،<br/><br/>"
+msgstr ""
+",\n"
+"    <br/><br/>"
 
 #. module: mail
 #. odoo-javascript
@@ -361,7 +360,7 @@ msgstr ". جستجوی خود را محدود کنید تا گزینه‌های 
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "1 new message"
-msgstr ""
+msgstr "1 پیام جدید"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
@@ -379,11 +378,13 @@ msgid ""
 "<button>Change your preferences</button> to receive new notifications in "
 "your inbox."
 msgstr ""
+"<button>تنظیمات برگزیده خود را تغییر دهید</button> تا اعلان های جدید را در "
+"صندوق ورودی خود دریافت کنید"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_kanban_open_target
 msgid "<i class=\"fa fa-check\"/> Done"
-msgstr ""
+msgstr "<i class=\"fa fa-check\"/> انجام شد"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_kanban
@@ -400,7 +401,7 @@ msgstr "<i class=\"fa fa-globe\" aria-label=\"Document url\"/>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_kanban_open_target
 msgid "<i class=\"fa fa-times\"/> Cancel"
-msgstr ""
+msgstr "<i class=\"fa fa-times\"/> لغو"
 
 #. module: mail
 #. odoo-javascript
@@ -421,6 +422,9 @@ msgid ""
 " notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. "
 "Start your message with <i>'/'</i> to get the list of possible commands.</p>"
 msgstr ""
+"<p><b>پیامی </b> برای اعضای این کانال بنویسید.</p> <p>شما میتوانید فردی را "
+"با <i>'@'</i> یا لینک کردن در کانال دیگر با  <i>'#'</i>مطلع کنید. پیام را با"
+" <i>'/'</i> شروع کنید تا لیست دستورات ممکن را دریافت کنید.</p>"
 
 #. module: mail
 #. odoo-javascript
@@ -430,6 +434,9 @@ msgid ""
 " groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
 "marketing, product XYZ, after work party, etc).</p>"
 msgstr ""
+"<p>کانال ها سازماندهی اطلاعات را در موضوعات و گروه های مختلف آسان می "
+"کنند.</p> <p>سعی کنید تا <b>اولین کانال تان را بسازید</b>(به عنوان مثال "
+"فروش، بازاریابی، محصول XYZ، مهمانی بعد از کار و غیره) .</p>"
 
 #. module: mail
 #. odoo-javascript
@@ -552,7 +559,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_scheduled_message.py:0
 msgid "A Scheduled Message cannot be scheduled in the past"
-msgstr ""
+msgstr "یک پیام برنامه ریزی شده را نمی توان در گذشته برنامه ریزی کرد"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_bus_presence_partner_or_guest_exists
@@ -582,14 +589,14 @@ msgstr "چت نباید با بیش از ۲ نفر ایجاد شود. به جا�
 #. odoo-python
 #: code:addons/mail/wizard/mail_compose_message.py:0
 msgid "A message can only be scheduled in monocomment mode"
-msgstr ""
+msgstr "یک پیام فقط در حالت تک کامنت قابل برنامه ریزی است"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_scheduled_message.py:0
 msgid ""
 "A message cannot be scheduled on a model that does not have a mail thread."
-msgstr ""
+msgstr "یک پیام را نمی توان در مدلی که رشته ایمیل ندارد برنامه ریزی کرد."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_message_reaction_partner_or_guest_exists
@@ -608,7 +615,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_scheduled_message.py:0
 msgid "A scheduled message could not be sent"
-msgstr ""
+msgstr "پیام برنامه ریزی شده ارسال نشد"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__google_translate_api_key
@@ -641,7 +648,7 @@ msgstr "پذیرفتن"
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.xml:0
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
 msgid "Accept with camera"
-msgstr ""
+msgstr "پذیرفتن با دوربین"
 
 #. module: mail
 #. odoo-python
@@ -760,7 +767,7 @@ msgstr "فعالیت ها"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 msgid "Activities To Create"
-msgstr ""
+msgstr "فعالیت هایی برای ایجاد"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_activity_check_res_id_is_set
@@ -798,7 +805,7 @@ msgstr "میکسین فعالیت"
 #: model:ir.actions.act_window,name:mail.mail_activity_action
 #: model:ir.ui.menu,name:mail.menu_mail_activities
 msgid "Activity Overview"
-msgstr ""
+msgstr "بررسی اجمالی فعالیت"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_plan
@@ -845,7 +852,7 @@ msgstr "آیکون نوع فعالیت"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_kanban
 msgid "Activity Type Name"
-msgstr ""
+msgstr "نام نوع فعالیت"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_activity_type_action
@@ -865,6 +872,8 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Onboarding\", \"Prospect Follow-up\", \"Project Milestone Meeting\", ...)"
 msgstr ""
+"برنامه های فعالیت برای اختصاص لیستی از فعالیت ها تنها با چند کلیک استفاده می شود\n"
+"                    (e.g. \"Onboarding\", \"Prospect Follow-up\", \"Project Milestone Meeting\", ...)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_schedule
@@ -905,7 +914,7 @@ msgstr "افزودن دنبال کننده"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_reactions.xml:0
 msgid "Add Reaction"
-msgstr ""
+msgstr "افزودن واکنش"
 
 #. module: mail
 #. odoo-javascript
@@ -952,7 +961,7 @@ msgstr "افزودن یک آدرس ایمیل به لیست سیاه"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_wizard_invite_form
 msgid "Add and close"
-msgstr ""
+msgstr "افزودن و خروج"
 
 #. module: mail
 #. odoo-javascript
@@ -963,7 +972,7 @@ msgstr "اضافه به عنوان گیرنده و دنبال‌کننده (دل
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_wizard_invite_form
 msgid "Add contacts"
-msgstr ""
+msgstr "افزودن مخاطبین"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -975,7 +984,7 @@ msgstr "افزودن تماس ها برای درجریان قرار دادن..."
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/follower_list.js:0
 msgid "Add followers to this document"
-msgstr ""
+msgstr "پیروان را به این سند اضافه کنید"
 
 #. module: mail
 #. odoo-javascript
@@ -1032,7 +1041,7 @@ msgstr "تنظیمات پیشرفته"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_from__after_plan_date
 msgid "After Plan Date"
-msgstr ""
+msgstr "بعد از تاریخ طرح"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__account_journal__activity_exception_decoration__warning
@@ -1221,7 +1230,7 @@ msgstr "همه پیام‌ها"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/notification_settings.xml:0
 msgid "All conversations have been muted"
-msgstr ""
+msgstr "همه مکالمات بی صدا شده اند"
 
 #. module: mail
 #. odoo-python
@@ -1266,7 +1275,7 @@ msgstr "هنگام ارسال ایمیل خطایی رخ داد"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/failure_model.js:0
 msgid "An error occurred when sending an email on “%(record_name)s”"
-msgstr ""
+msgstr "هنگام ارسال ایمیل خطایی روی داد “%(record_name)s”"
 
 #. module: mail
 #. odoo-javascript
@@ -1331,13 +1340,13 @@ msgstr "بایگانی شده زیرا %(user_name)s (#%(user_id)s) حساب پ�
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/scheduled_message.js:0
 msgid "Are you sure you want to cancel the scheduled message?"
-msgstr ""
+msgstr "آیا مطمئن هستید که می خواهید پیام برنامه ریزی شده را لغو کنید؟"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/mail_composer_template_selector.js:0
 msgid "Are you sure you want to delete \"%(template_name)s\"?"
-msgstr ""
+msgstr "آیا مطمئن هستید که می خواهید حذف کنید \"%(template_name)s\"؟"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_view_form_confirm_delete
@@ -1372,12 +1381,13 @@ msgstr ""
 #: code:addons/mail/models/mail_blacklist.py:0
 msgid "Are you sure you want to unblacklist this email address?"
 msgstr ""
+"آیا مطمئن هستید که می خواهید این آدرس ایمیل را از لیست سیاه خارج کنید؟"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/mail_composer_template_selector.js:0
 msgid "Are your sure you want to update \"%(template_name)s\"?"
-msgstr ""
+msgstr "آیا مطمئن هستید که می خواهید به روز رسانی کنید \"%(template_name)s\"؟"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__on_demand
@@ -1565,7 +1575,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 msgid "Available for all Companies"
-msgstr ""
+msgstr "برای همه شرکت ها موجود است"
 
 #. module: mail
 #. odoo-javascript
@@ -1660,7 +1670,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_from__before_plan_date
 msgid "Before Plan Date"
-msgstr ""
+msgstr "قبل از تاریخ برنامه ریزی"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__is_blacklisted
@@ -1837,7 +1847,7 @@ msgstr "تماس"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
 msgid "Call Settings"
-msgstr ""
+msgstr "تنظیمات تماس"
 
 #. module: mail
 #. odoo-javascript
@@ -1905,7 +1915,7 @@ msgstr "لغو ایمیل"
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/scheduled_message.js:0
 msgid "Cancel Message"
-msgstr ""
+msgstr "لغو پییام"
 
 #. module: mail
 #. odoo-javascript
@@ -1918,12 +1928,12 @@ msgstr "لغو شد"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_canned_response
 msgid "Canned Response"
-msgstr ""
+msgstr "جواب آماده"
 
 #. module: mail
 #: model:res.groups,name:mail.group_mail_canned_response_admin
 msgid "Canned Response Administrator"
-msgstr ""
+msgstr "مدیر جواب آماده"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_canned_response_action
@@ -1940,7 +1950,7 @@ msgstr "جستجوی پاسخ‌های آماده"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_form
 msgid "Canned response"
-msgstr ""
+msgstr "جواب آماده"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_canned_response__source
@@ -1949,11 +1959,14 @@ msgid ""
 "in your messages. Type ':' followed by the name of your shortcut (e.g. "
 ":hello) to use in your messages."
 msgstr ""
+"پاسخ آماده که به طور خودکار با محتوای طولانی تر در پیام های شما جایگزین می "
+"شود. ':' را تایپ کنید و سپس نام میانبر خود (به عنوان مثال :hello) را برای "
+"استفاده در پیام های خود تایپ کنید."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
 msgid "Canned responses"
-msgstr ""
+msgstr "جوابهای آماده"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_canned_response_action
@@ -1968,7 +1981,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Cannot change initial message nor parent channel of: %(channels)s."
-msgstr ""
+msgstr "پیام اولیه و کانال والد آن را نمی توان تغییر داد: %(channels)s."
 
 #. module: mail
 #. odoo-python
@@ -1982,6 +1995,7 @@ msgstr "نمی‌توان نوع کانال را تغییر داد: %(channel_na
 msgid ""
 "Cannot create %(channels)s: initial message should belong to parent channel."
 msgstr ""
+"نمی توان ایجاد کرد %(channels)s:  پیام اولیه باید متعلق به کانال مادر باشد.."
 
 #. module: mail
 #. odoo-python
@@ -1990,6 +2004,8 @@ msgid ""
 "Cannot create %(channels)s: parent should not be a sub-channel and should be"
 " of type 'channel'."
 msgstr ""
+"نمی توان ایجاد کرد %(channels)s: والد نباید یک کانال فرعی باشد و باید از نوع"
+"  'channel' باشد."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__email_cc
@@ -2081,7 +2097,7 @@ msgstr "عضو کانال"
 #: code:addons/mail/static/src/discuss/core/common/discuss_notification_settings.xml:0
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__channel_notifications
 msgid "Channel Notifications"
-msgstr ""
+msgstr "پیام کانال"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__channel_type
@@ -2135,7 +2151,7 @@ msgstr "گفتگو"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_hub.xml:0
 msgid "Chat Options"
-msgstr ""
+msgstr "گزینه های چت"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__channel_type
@@ -2217,13 +2233,13 @@ msgstr "بستن"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_bubble.xml:0
 msgid "Close Chat Bubble"
-msgstr ""
+msgstr "بستن حباب چت"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread_actions.js:0
 msgid "Close Chat Window (ESC)"
-msgstr ""
+msgstr "بستن پنجره چت (ESC)"
 
 #. module: mail
 #. odoo-javascript
@@ -2235,13 +2251,13 @@ msgstr "بستن جستجو"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_hub.xml:0
 msgid "Close all conversations"
-msgstr ""
+msgstr "تمام مکالمات را ببندید"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/ptt_ad_banner.xml:0
 msgid "Close banner"
-msgstr ""
+msgstr "بستن بنر"
 
 #. module: mail
 #. odoo-javascript
@@ -2271,7 +2287,7 @@ msgstr "بسته شد"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/discuss_sidebar.xml:0
 msgid "Collapse panel"
-msgstr ""
+msgstr "جمع کردن پانل"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__new
@@ -2282,7 +2298,7 @@ msgstr "دریافت پاسخ‌ها در یک آدرس ایمیل خاص"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
 msgid "Come here often? Install the app for quick and easy access!"
-msgstr ""
+msgstr "اغلب به اینجا می آیند؟ برای دسترسی سریع و آسان برنامه را نصب کنید!"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -3142,7 +3158,7 @@ msgstr "بحث: لغو قطع صدای عضو کانال"
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_discuss_users_settings_unmute_ir_actions_server
 msgid "Discuss: users settings unmute"
-msgstr ""
+msgstr "بحث: تنظیمات کاربران لغو نادیده می‌شوند"
 
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_channel
@@ -3521,7 +3537,7 @@ msgstr "دامنه ایمیل"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
 msgid "Email Failure: %(modelName)s"
-msgstr ""
+msgstr "شکست ایمیل: %(modelName)s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__email_primary_color
@@ -3650,7 +3666,7 @@ msgstr "دامنه‌ی ایمیل مانند 'example.com' در 'odoo@example.c
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_message_subtype_form
 msgid "Email message"
-msgstr "ل ها"
+msgstr "پیام ایمیل"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_resend_message
@@ -3695,7 +3711,7 @@ msgstr "فقط کارمند"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
 msgid "Enable"
-msgstr ""
+msgstr "فعال"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model_fields__tracking
@@ -3872,7 +3888,7 @@ msgstr "ناموفق"
 #. odoo-javascript
 #: code:addons/mail/static/src/webclient/web/webclient.js:0
 msgid "Failed to enable push notifications"
-msgstr ""
+msgstr "اعلان‌های فشار فعال نشد"
 
 #. module: mail
 #. odoo-javascript
@@ -3890,7 +3906,7 @@ msgstr "بارگذاری سرور SFU ناموفق بود، در حال برگش
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message.xml:0
 msgid "Failed to post the message. Click to retry"
-msgstr ""
+msgstr "پیام ارسال نشد. برای امتحان مجدد کلیک کنید"
 
 #. module: mail
 #. odoo-python
@@ -3948,7 +3964,7 @@ msgstr "نوع شکست"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
 msgid "Failure: %(modelName)s"
-msgstr ""
+msgstr "شکست: %(modelName)s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__starred_partner_ids
@@ -3966,7 +3982,7 @@ msgstr "علاقه‌مندی ها"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "Feedback:"
-msgstr ""
+msgstr "بازخورد:"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -4212,7 +4228,7 @@ msgstr "از"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__from_message_id
 msgid "From Message"
-msgstr ""
+msgstr "از پیام"
 
 #. module: mail
 #. odoo-javascript
@@ -4480,7 +4496,7 @@ msgstr "پنهان کردن پیام‌های سنجاق شده"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_hub.xml:0
 msgid "Hide all conversations"
-msgstr ""
+msgstr "مخفی کردن همه مکالمات"
 
 #. module: mail
 #. odoo-javascript
@@ -4745,6 +4761,7 @@ msgid ""
 "If set, the user will not receive notifications from all the channels until "
 "this date."
 msgstr ""
+"در صورت تنظیم، کاربر تا این تاریخ از همه کانال ها اعلان دریافت نخواهد کرد."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_bounced_content
@@ -5013,7 +5030,7 @@ msgstr "آدرس ایمیل نامعتبر"
 #. odoo-python
 #: code:addons/mail/models/mail_blacklist.py:0
 msgid "Invalid email address “%s”"
-msgstr ""
+msgstr "آدرس ایمیل نامعتبر است “%s”"
 
 #. module: mail
 #. odoo-python
@@ -5196,7 +5213,7 @@ msgstr "آیا دنبال می کند"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_link_preview__is_hidden
 msgid "Is Hidden"
-msgstr ""
+msgstr "آیا مخفی است"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__is_member
@@ -5226,7 +5243,7 @@ msgstr "یک گزارش است"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_scheduled_message__is_note
 msgid "Is a note"
-msgstr ""
+msgstr "آیا یادداشت است"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__is_discuss_sidebar_category_channel_open
@@ -7721,6 +7738,12 @@ msgid "Portal Access Revoked"
 msgstr "لغو دسترسی پورتال"
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_thread.py:0
+msgid "Portal users can only filter threads by themselves as followers."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__comment
 msgid "Post on a document"
 msgstr "ارسال بر روی یک سند"
@@ -8782,12 +8805,6 @@ msgstr "انتخاب یک زبان"
 #: code:addons/mail/static/src/views/web/fields/assign_user_command_hook.js:0
 msgid "Select a user..."
 msgstr "انتخاب یک کاربر..."
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/discuss_notification_settings.xml:0
-msgid "Select duration"
-msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -11409,12 +11426,6 @@ msgid "after previous activity deadline"
 msgstr "بعد از موعد نهایی فعالیت قبلی"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/chatter/web/mail_composer_schedule_dialog.xml:0
-msgid "afternoon"
-msgstr ""
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_form
 msgid "alias"
 msgstr ""
@@ -11502,12 +11513,6 @@ msgid "created this channel."
 msgstr "ایجاد شده توسط این کانال."
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/chatter/web/mail_composer_schedule_dialog.xml:0
-msgid "custom"
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_unit__days
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__days
 msgid "days"
@@ -11530,12 +11535,6 @@ msgstr "روزها:"
 #: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
 msgid "deaf"
 msgstr "ناشنوا"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/discuss_notification_settings.xml:0
-msgid "default"
-msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_push__mail_push_device_id
@@ -11798,12 +11797,6 @@ msgid "model %s does not accept document creation"
 msgstr "مدل %s ساختن سند را نمی‌پذیرد"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/chatter/web/mail_composer_schedule_dialog.xml:0
-msgid "monday"
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_unit__months
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__months
 msgid "months"
@@ -11814,12 +11807,6 @@ msgstr "ماه"
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "more"
 msgstr "بیشتر"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/chatter/web/mail_composer_schedule_dialog.xml:0
-msgid "morning"
-msgstr "صبح"
 
 #. module: mail
 #. odoo-javascript
