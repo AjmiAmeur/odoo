@@ -116,13 +116,13 @@ class HrEmployeePrivate(models.Model):
     work_permit_scheduled_activity = fields.Boolean(default=False, groups="hr.group_hr_user")
     work_permit_name = fields.Char('work_permit_name', compute='_compute_work_permit_name', groups="hr.group_hr_user")
     additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user", tracking=True)
-    # certificate = fields.Selection([
-    #     ('graduate', 'Graduate'),
-    #     ('bachelor', 'Bachelor'),
-    #     ('master', 'Master'),
-    #     ('doctor', 'Doctor'),
-    #     ('other', 'Other'),
-    # ], 'Certificate Level', groups="hr.group_hr_user", tracking=True)
+    certificate = fields.Selection([
+          ('graduate', 'Graduate'),
+          ('bachelor', 'Bachelor'),
+          ('master', 'Master'),
+          ('doctor', 'Doctor'),
+          ('other', 'Other'),
+     ], 'Certificate Level', groups="hr.group_hr_user", tracking=True)
     # certificate = fields.Char("Certificate Level", groups="hr.group_hr_user", tracking=True)
     # le champs diplome_id remplace le champs certificate
     diplome_id = fields.Many2one('hr.diplome', string='Diplôme', groups="hr.group_hr_user", store=True, readonly=False)
