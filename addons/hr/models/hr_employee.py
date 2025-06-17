@@ -505,13 +505,16 @@ class HrEmployeePrivate(models.Model):
     @api.constrains('identification_id')
     def _check_identification_id(self):
         for employee in self:
-            if not employee.identification_id.isdigit() or len(employee.identification_id) != 10:
+            if employee.identification_id: # This checks if the field has a non-empty, non-False, non-None value
+
+                if not employee.identification_id.isdigit() or len(employee.identification_id) != 10:
                     raise ValidationError("Le matricule doit être composé de 10 chiffres.")                
 
     @api.constrains('ssnid')
     def _check_ssnid(self):
         for employee in self:
-            if not employee.ssnid.isdigit() or len(employee.ssnid) != 8:
+            if employee.ssnid: # This checks if the field has a non-empty, non-False, non-None value
+                if not employee.ssnid.isdigit() or len(employee.ssnid) != 8:
                     raise ValidationError("Le numéro de CIN saisie doit contenir exactement 8 chiffres.")   
     @api.onchange('user_id')
     def _onchange_user(self):
