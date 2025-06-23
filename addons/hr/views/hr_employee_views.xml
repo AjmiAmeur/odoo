@@ -12,7 +12,8 @@
                     <field name="department_id"/>
                     <searchpanel>
                         <field name="company_id" string="Etablissement" groups="base.group_multi_company" icon="fa-building" enable_counters="1"/>
-                        <field name="department_id" icon="fa-users" enable_counters="1"/>
+                        <field name="employee_type" string="Type" groups="base.group_multi_company" icon="fa-user-circle-o" enable_counters="1"/>
+                        <field name="department_id" groups="base.group_multi_company" icon="fa-users" enable_counters="1"/>
                     </searchpanel>
                     <field name="parent_id" string="Manager" domain="[('company_id', 'in', allowed_company_ids)]"/>
                     <field name="job_id"/>
@@ -105,7 +106,7 @@
 
                             </group>
                             <group>
-                                <field name="department_id"/>
+                                <field name="department_id" options='{"no_open": True, "no_create": True}'/>
                                 <field name="job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" placeholder="e.g. Sales Manager"/>
                                 <field name="parent_id" widget="many2one_avatar_user"/>
                                 <field name="coach_id" widget="many2one_avatar_user" invisible="1"/>
@@ -122,7 +123,7 @@
                                     <group>
                                         <field name="date_entree_administration"/>
                                         <field name="titularisation"/>
-                                        <field name="grade_id"/>
+                                        <field name="grade_id" options='{"no_open": True, "no_create": True}'/>
                                          <field name="employee_type"/>
                                         <field name="sous_type_name" />
                                         <field name="corps_name" />
@@ -134,8 +135,8 @@
                                         <field name="date_entree_etablissement"  />
                                         <field name="date_titularisation" />
                                         <field name="date_nomination_grade" />
-                                        <field name="position_id"/>
-                                        <field name="specialite_id"/>
+                                        <field name="position_id" options='{"no_open": True, "no_create": True}' />
+                                        <field name="specialite_id" options='{"no_open": True, "no_create": True}'/>
                                         <field name="discipline_name"/>
                                         <field name="domaine_name" />
 
@@ -299,6 +300,7 @@
                     <header>
                         <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_user"/>
                     </header>
+                    <field name="identification_id" readonly="1"/>
                     <field name="name" readonly="1"/>
                     <field name="name_ar" readonly="1"/>
                     <field name="work_phone" class="o_force_ltr" readonly="1" optional="show"/>
@@ -358,11 +360,20 @@
                                 <span t-if="record.name_ar.raw_value" class="o_kanban_record_subtitle">
                                         <field name="name_ar"/>
                                 </span>
+                                 <span t-if="record.sous_type_name.raw_value" class="o_kanban_record_subtitle">
+                                    <field name="sous_type_name" placeholder="Sous Type"/>
+                                </span>
                                 <field t-if="record.job_title.raw_value" name="job_title"/>
+                                 <div t-if="record.department_id.raw_value">
+                                    <i class="fa fa-fw me-2 fa-building text-primary" title="Département"/>
+                                    <field name="department_id" />
+                                </div>
                                 <div t-if="record.identification_id.raw_value">
                                     <i class="fa fa-fw me-2 fa-id-card text-primary" title="Matricule"/>
                                     <field name="identification_id" />
                                 </div>
+
+                                
                                 <div t-if="record.work_email.raw_value" class="o_text_overflow">
                                     <i class="fa fa-fw me-2 fa-envelope text-primary" title="Email"/>
                                     <field name="work_email" />

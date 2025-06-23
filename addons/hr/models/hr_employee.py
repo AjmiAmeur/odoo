@@ -26,7 +26,7 @@ class HrEmployeePrivate(models.Model):
     """
     _name = "hr.employee"
     _description = "Employee"
-    _order = 'name'
+    _order = 'company_id,name'
     _inherit = ['hr.employee.base', 'mail.thread.main.attachment', 'mail.activity.mixin', 'resource.mixin', 'avatar.mixin']
     _mail_post_access = 'read'
 
