@@ -135,7 +135,7 @@
                                         <field name="date_entree_etablissement"  />
                                         <field name="date_titularisation" />
                                         <field name="date_nomination_grade" />
-                                        <field name="position_id" options='{"no_open": True, "no_create": True}' />
+                                        <field name="position_id"  />
                                         <field name="specialite_id" options='{"no_open": True, "no_create": True}'/>
                                         <field name="discipline_name"/>
                                         <field name="domaine_name" />
