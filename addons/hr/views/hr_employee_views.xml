@@ -12,8 +12,9 @@
                     <field name="department_id"/>
                     <searchpanel>
                         <field name="company_id" string="Etablissement" groups="base.group_multi_company" icon="fa-building" enable_counters="1"/>
-                        <field name="employee_type" string="Type" groups="base.group_multi_company" icon="fa-user-circle-o" enable_counters="1"/>
-                        <field name="department_id" groups="base.group_multi_company" icon="fa-users" enable_counters="1"/>
+                        <field name="employee_type" string="Type" icon="fa-user-circle-o" enable_counters="1"/>
+                        <field name="sous_type_id" string="sous Type" icon="fa-address-book " enable_counters="1"  parent_name="employee_type"/>
+                        <field name="department_id"  icon="fa-university" enable_counters="1" parent_name="company_id"/>
                     </searchpanel>
                     <field name="parent_id" string="Manager" domain="[('company_id', 'in', allowed_company_ids)]"/>
                     <field name="job_id"/>
@@ -381,6 +382,10 @@
                                 <div t-if="record.work_phone.raw_value">
                                     <i class="fa fa-fw me-2 fa-phone text-primary" title="Phone"/>
                                     <field name="work_phone" />
+                                </div>
+                                 <div t-if="record.position_id.raw_value">
+                                    <i class="fa fa-fw me-2 fa-clock-o text-primary" title="position"/>
+                                    <field name="position_id" />
                                 </div>
                                 <field name="employee_properties" widget="properties"/>
                                 <field class="hr_tags" name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
