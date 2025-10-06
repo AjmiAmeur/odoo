@@ -7,7 +7,7 @@ from odoo import models, fields
 class HrEmployeeSousType(models.Model):
     _name = 'hr.sous.type'
     _description = 'sous-types des employés'
-    _order = "name"
+    _order = "type,name"
 
 
     name = fields.Char(string="Sous-type", help="sous-types des employés.", required=True, translate=True)
