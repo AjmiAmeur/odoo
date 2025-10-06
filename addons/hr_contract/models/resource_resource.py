@@ -31,7 +31,7 @@ class ResourceResource(models.Model):
         resource_without_contract = self.filtered(
             lambda r: not r.employee_id\
                    or not r.employee_id.id in employee_ids_with_active_contracts\
-                   or r.employee_id.employee_type not in ['employee', 'student']
+                   or r.employee_id.employee_type not in ['employee', 'student','enseignant']
         )
         if resource_without_contract:
             calendars_within_period_per_resource.update(
