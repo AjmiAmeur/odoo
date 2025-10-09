@@ -21,7 +21,6 @@
             <field name="res_model">hr.department</field>
             <field name="default" eval="False"/>
             <field name="parent_id" ref="mt_detachement_pending"/>
-            <field name="relation_field">department_id</field>
             <field name="description">Detachment about to expire</field>
         </record>
 

@@ -23,24 +23,15 @@ class Detachement(models.Model):
 
     name = fields.Char('Detachement Reference', required=True)
     active = fields.Boolean(default=True)
-    structure_type_id = fields.Many2one('hr.payroll.structure.type', string="Salary Structure Type", compute="_compute_structure_type_id", readonly=False, store=True, tracking=True)
     employee_id = fields.Many2one('hr.employee', string='Employee', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", index=True)
     active_employee = fields.Boolean(related="employee_id.active", string="Active Employee")
-    department_id = fields.Many2one('hr.department', compute='_compute_employee_detachement', store=True, readonly=False,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string="Department")
-    job_id = fields.Many2one('hr.job', compute='_compute_employee_detachement', store=True, readonly=False,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string='Job Position')
     date_start = fields.Date('Start Date', required=True, default=fields.Date.today, tracking=True, index=True)
     date_end = fields.Date('End Date', tracking=True,
         help="End date of the detachement (if it's a fixed-term detachement).")
-    trial_date_end = fields.Date('End of Trial Period',
-        help="End date of the trial period (if there is one).")
     resource_calendar_id = fields.Many2one(
         'resource.calendar', 'Working Schedule', compute='_compute_employee_detachement', store=True, readonly=False,
         default=lambda self: self.env.company.resource_calendar_id.id, copy=False, index=True, tracking=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    wage = fields.Monetary('Wage', required=True, tracking=True, help="Employee's monthly gross wage.", aggregator="avg")
-    detachement_wage = fields.Monetary('Detachement Wage', compute='_compute_detachement_wage')
     notes = fields.Html('Notes')
     state = fields.Selection([
         ('draft', 'New'),
@@ -90,38 +81,11 @@ class Detachement(models.Model):
     @api.depends('employee_id')
     def _compute_employee_detachement(self):
         for detachement in self.filtered('employee_id'):
-            detachement.job_id = detachement.employee_id.job_id
-            detachement.department_id = detachement.employee_id.department_id
             detachement.resource_calendar_id = detachement.employee_id.resource_calendar_id
             detachement.company_id = detachement.employee_id.company_id
 
-    @api.depends('company_id')
-    def _compute_structure_type_id(self):
-
-        default_structure_by_country = {}
-
-        def _default_salary_structure(country_id):
-            default_structure = default_structure_by_country.get(country_id)
-            if default_structure is None:
-                default_structure = default_structure_by_country[country_id] = (
-                    self.env['hr.payroll.structure.type'].search([('country_id', '=', country_id)], limit=1)
-                    or self.env['hr.payroll.structure.type'].search([('country_id', '=', False)], limit=1)
-                )
-            return default_structure
-
-        for detachement in self:
-            if not detachement.structure_type_id or (detachement.structure_type_id.country_id and detachement.structure_type_id.country_id != detachement.company_id.country_id):
-                detachement.structure_type_id = _default_salary_structure(detachement.company_id.country_id.id)
-
-    @api.onchange('structure_type_id')
-    def _onchange_structure_type_id(self):
-        default_calendar = self.structure_type_id.default_resource_calendar_id
-        if default_calendar and default_calendar.company_id == self.company_id:
-            # If the form was opened from the action_open_detachement action,
-            # suggest current employee's calendar for the new detachement instead of the default_calendar.
-            if self.env.context.get('from_action_open_detachement'):
-                return
-            self.resource_calendar_id = default_calendar
+    
+    
 
     @api.constrains('employee_id', 'state', 'kanban_state', 'date_start', 'date_end')
     def _check_current_detachement(self):
@@ -267,10 +231,6 @@ class Detachement(models.Model):
     def _get_employee_vals_to_update(self):
         self.ensure_one()
         vals = {'detachement_id': self.id}
-        if self.job_id and self.job_id != self.employee_id.job_id:
-            vals['job_id'] = self.job_id.id
-        if self.department_id:
-            vals['department_id'] = self.department_id.id
         return vals
 
     def _assign_open_detachement(self):
@@ -278,20 +238,9 @@ class Detachement(models.Model):
             vals = detachement._get_employee_vals_to_update()
             detachement.employee_id.sudo().write(vals)
 
-    @api.depends('wage')
-    def _compute_detachement_wage(self):
-        for detachement in self:
-            detachement.detachement_wage = detachement._get_detachement_wage()
+    
+  
 
-    def _get_detachement_wage(self):
-        if not self:
-            return 0
-        self.ensure_one()
-        return self[self._get_detachement_wage_field()]
-
-    def _get_detachement_wage_field(self):
-        self.ensure_one()
-        return 'wage'
 
     def _is_fully_flexible(self):
         """ return True if detachement has a fully flexible working calendar """
@@ -355,10 +304,7 @@ class Detachement(models.Model):
             return self.env.ref('hr_detachement.mt_detachement_close')
         return super(Detachement, self)._track_subtype(init_values)
 
-    def _is_struct_from_country(self, country_code):
-        self.ensure_one()
-        self_sudo = self.sudo()
-        return self_sudo.structure_type_id and self_sudo.structure_type_id.country_id.code == country_code
+   
 
     def action_open_detachement_form(self):
         self.ensure_one()

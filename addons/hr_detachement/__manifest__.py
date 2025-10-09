@@ -5,7 +5,7 @@
     'name': 'Détachement des employés',
     'version': '1.0',
     'category': 'Human Resources/Detachements',
-    'sequence': 335,
+    'sequence': 340,
     'description': """
 Add all information on the employee form to manage detachements.
 =============================================================

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<templates id="template" xml:space="preserve">
-    <t t-name="hr_detachement.DetachementWarningTooltip">
-        <span
-            class="fa fa-exclamation-triangle text-danger o_calendar_warning"
-            data-tooltip-template="hr_detachement.CalendarMismatch"
-            t-att-data-tooltip-info='tooltipInfo'/>
-    </t>
-</templates>
