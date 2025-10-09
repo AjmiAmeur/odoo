@@ -57,10 +57,6 @@ class Detachement(models.Model):
         ('done', 'Ready'),
         ('blocked', 'Warning')
     ], string='Kanban State', default='normal', tracking=True, copy=False)
-    currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)
-    permit_no = fields.Char('Work Permit No', related="employee_id.permit_no", readonly=False)
-    visa_no = fields.Char('Visa No', related="employee_id.visa_no", readonly=False)
-
     def _get_hr_responsible_domain(self):
         return "[('share', '=', False), ('company_ids', 'in', company_id), ('groups_id', 'in', %s)]" % self.env.ref('hr.group_hr_user').id
 

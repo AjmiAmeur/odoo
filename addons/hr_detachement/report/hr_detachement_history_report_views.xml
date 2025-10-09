@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="hr_contract_history_view_search" model="ir.ui.view">
-        <field name="name">hr.contract.history.search</field>
-        <field name="model">hr.contract.history</field>
+    <record id="hr_detachement_history_view_search" model="ir.ui.view">
+        <field name="name">hr.detachement.history.search</field>
+        <field name="model">hr.detachement.history</field>
         <field name="arch" type="xml">
-            <search string="Search Reference Contracts">
+            <search string="Search Reference Detachements">
                 <field name="name"/>
                 <field name="employee_id"/>
                 <field name="resource_calendar_id"/>
                 <field name="state"/>
-                <field name="is_under_contract"/>
-                <filter string="Running Contracts" name="open_contracts" domain="[('state', '=', 'open')]"/>
-                <filter string="Contracts to Review" name="contract_to_review" domain="['|', ('state', 'in', ['draft', 'close', 'cancel']), ('is_under_contract', '!=', True)]"/>
-                <filter string="No Contracts" name="no_contracts" domain="[('contract_id', '=', False)]"/>
-                <filter string="Currently Under Contract" name="currently_under_contract" domain="[('is_under_contract', '=', True)]"/>
+                <field name="is_under_detachement"/>
+                <filter string="Running Detachements" name="open_detachements" domain="[('state', '=', 'open')]"/>
+                <filter string="Detachements to Review" name="detachement_to_review" domain="['|', ('state', 'in', ['draft', 'close', 'cancel']), ('is_under_detachement', '!=', True)]"/>
+                <filter string="No Detachements" name="no_detachements" domain="[('detachement_id', '=', False)]"/>
+                <filter string="Currently Under Detachement" name="currently_under_detachement" domain="[('is_under_detachement', '=', True)]"/>
                 <filter string="Active Employees" name="active_employees" domain="[('active_employee', '=', True)]"/>
                 <group expand="0" string="Group By">
                     <filter string="Status" name='group_by_state' domain="[]" context="{'group_by': 'state'}"/>
@@ -22,24 +22,24 @@
             </search>
         </field>
     </record>
-    <record id="hr_contract_history_view_form_action" model="ir.actions.act_window">
-        <field name="name">Contracts</field>
-        <field name="res_model">hr.contract.history</field>
+    <record id="hr_detachement_history_view_form_action" model="ir.actions.act_window">
+        <field name="name">Detachements</field>
+        <field name="res_model">hr.detachement.history</field>
         <field name="view_mode">form</field>
         <field name="context">{'search_default_active_employees': 1}</field>
     </record>
-    <record id="hr_contract_history_view_form" model="ir.ui.view">
-        <field name="name">hr.contract.history.form</field>
-        <field name="model">hr.contract.history</field>
+    <record id="hr_detachement_history_view_form" model="ir.ui.view">
+        <field name="name">hr.detachement.history.form</field>
+        <field name="model">hr.detachement.history</field>
         <field name="arch" type="xml">
-            <form string="Contract History"
+            <form string="Detachement History"
                   create="false"
                   edit="false"
                   delete="false"
                   duplicate="false"
                   import="false">
                 <header>
-                    <button name="hr_contract_view_form_new_action" string="Create" type="object" groups="hr_contract.group_hr_contract_manager" class="btn-primary"/>
+                    <button name="hr_detachement_view_form_new_action" string="Create" type="object" groups="hr_detachement.group_hr_detachement_manager" class="btn-primary"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box"/>
@@ -49,7 +49,7 @@
                                 <field name="display_name"/>
                             </div>
                             <div class="ps-3">
-                                <field name="under_contract_state" widget="state_selection" readonly="1"/>
+                                <field name="under_detachement_state" widget="state_selection" readonly="1"/>
                             </div>
                         </div>
                     </h1>
@@ -58,11 +58,10 @@
                     </h2>
                     <group>
                         <group>
-                            <field name="contract_id" invisible="1"/>
+                            <field name="detachement_id" invisible="1"/>
                             <field name="company_country_id" invisible="1"/>
                             <field name="country_code" invisible="1"/>
                             <field name="resource_calendar_id"/>
-                            <field name="currency_id" invisible="1"/>
                             
                         </group>
                         <group>
@@ -70,28 +69,27 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Contract History" name="contract_history">
-                            <field name="contract_ids" widget="one2many" readonly="0">
-                                <list string="Current Contracts"
+                        <page string="Detachement History" name="detachement_history">
+                            <field name="detachement_ids" widget="one2many" readonly="0">
+                                <list string="Current Detachements"
                                       decoration-primary="state == 'open'"
                                       decoration-muted="state == 'close'"
-                                      decoration-bf="id == parent.contract_id"
+                                      decoration-bf="id == parent.detachement_id"
                                       default_order = "date_start desc, state desc"
                                       editable="bottom"
                                       no_open="1"
                                       create="0" delete="0">
-                                    <button name="action_open_contract_form" type="object" icon="fa-external-link" title="Open Contract"/>
+                                    <button name="action_open_detachement_form" type="object" icon="fa-external-link" title="Open Detachement"/>
                                     <field name="id" column_invisible="True"/>
-                                    <field name="name" string="Contract Name"/>
+                                    <field name="name" string="Detachement Name"/>
                                     <field name="date_start"/>
                                     <field name="date_end"/>
                                     <field name="resource_calendar_id"/>
-                                    <field name="currency_id" column_invisible="True"/>
                                     <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'close'" decoration-success="state == 'open'"/>
                                 </list>
                             </field>
                         </page>
-                        <page string="Employee Information" name="contract_others">
+                        <page string="Employee Information" name="detachement_others">
                             <group>
                                 <field name="date_hired"/>
                                 <field name="hr_responsible_id" widget="many2one_avatar_user"/>
@@ -103,11 +101,11 @@
             </form>
         </field>
     </record>
-    <record id="hr_contract_history_view_list_action" model="ir.actions.act_window">
+    <record id="hr_detachement_history_view_list_action" model="ir.actions.act_window">
         <field name="name">Employees</field>
-        <field name="res_model">hr.contract.history</field>
+        <field name="res_model">hr.detachement.history</field>
         <field name="view_mode">list,kanban,form</field>
-        <field name="search_view_id" ref="hr_contract_history_view_search"/>
+        <field name="search_view_id" ref="hr_detachement_history_view_search"/>
         <field name="context">
             {
                 'search_default_active_employees': 1,
@@ -120,11 +118,11 @@
             </p>
         </field>
     </record>
-    <record id="hr_contract_history_to_review_view_list_action" model="ir.actions.act_window">
-        <field name="name">Contracts to Review</field>
-        <field name="res_model">hr.contract.history</field>
+    <record id="hr_detachement_history_to_review_view_list_action" model="ir.actions.act_window">
+        <field name="name">Detachements to Review</field>
+        <field name="res_model">hr.detachement.history</field>
         <field name="view_mode">list,form</field>
-        <field name="search_view_id" ref="hr_contract_history_view_search"/>
+        <field name="search_view_id" ref="hr_detachement_history_view_search"/>
         <field name="context">
             {
                 'search_default_to_review': 1,
@@ -132,12 +130,12 @@
             }
         </field>
     </record>
-    <record id="hr_contract_history_view_list" model="ir.ui.view">
-        <field name="name">hr.contract.history.list</field>
-        <field name="model">hr.contract.history</field>
+    <record id="hr_detachement_history_view_list" model="ir.ui.view">
+        <field name="name">hr.detachement.history.list</field>
+        <field name="model">hr.detachement.history</field>
         <field name="arch" type="xml">
-            <list string="Contracts"
-                  default_order = 'is_under_contract, date_start desc'
+            <list string="Detachements"
+                  default_order = 'is_under_detachement, date_start desc'
                   edit="false"
                   delete="false"
                   duplicate="false"
@@ -145,25 +143,24 @@
                   create="false">
                 <field name="employee_id" widget="many2one_avatar_employee"/>
                 <field name="date_hired"/>
-                <field name="is_under_contract" column_invisible="True"/>
+                <field name="is_under_detachement" column_invisible="True"/>
                 <field name="name"/>
                 <field name="date_start"/>
                 <field string="Reference Working Time" name="resource_calendar_id" optional="hide"/>
-                <field name="under_contract_state" widget="state_selection" optional="hide"
+                <field name="under_detachement_state" widget="state_selection" optional="hide"
                     options="{'hide_label': False}"/>
-                <field name="currency_id" column_invisible="True"/>
                 <field name="state"
                        widget="badge"
                        decoration-info="state == 'draft'"
                        decoration-warning="state == 'close'"
                        decoration-success="state == 'open'"/>
-                <field name="contract_count"/>
+                <field name="detachement_count"/>
             </list>
         </field>
     </record>
-    <record id="hr_contract_history_view_kanban" model="ir.ui.view">
-        <field name="name">hr.contract.history.view.kanban</field>
-        <field name="model">hr.contract.history</field>
+    <record id="hr_detachement_history_view_kanban" model="ir.ui.view">
+        <field name="name">hr.detachement.history.view.kanban</field>
+        <field name="model">hr.detachement.history</field>
         <field name="arch" type="xml">
             <kanban default_order="date_end" sample="1" create="0">
                 <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
