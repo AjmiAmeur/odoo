@@ -34,10 +34,20 @@ class DetachementHistory(models.Model):
     ], string='Status', readonly=True)
     resource_calendar_id = fields.Many2one('resource.calendar', string="Working Schedule", readonly=True)
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
-    company_country_id = fields.Many2one('res.country', string="Company country", related='company_id.country_id', readonly=True)
+    company_country_id = fields.Many2one('res.country', string="Company country", related='organisme_etranger_id.country_id', readonly=True)
     country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True)
     detachement_ids = fields.One2many('hr.detachement', string='Detachements', compute='_compute_detachement_ids', readonly=True, compute_sudo=True)
     detachement_count = fields.Integer(compute='_compute_detachement_count', string="# Detachements")
+    organisme_detachement_id = fields.Many2one(
+        comodel_name='res.partner',
+        string='Organisme de détachement en tunisie', ondelete='restrict',
+        domain="['|', ('parent_id','=', False), ('is_company','=',True)]",
+        help="Organisme de détachement en tunisie.")
+    organisme_etranger_id = fields.Many2one(
+        comodel_name='res.partner',
+        string='Organisme de détachement à l’étranger', ondelete='restrict',
+        domain="['|', ('parent_id','=', False), ('is_company','=',True)]",
+        help="Organisme de détachement à l’étranger.")
     under_detachement_state = fields.Selection([
         ('done', 'Under Detachement'),
         ('blocked', 'Not Under Detachement')

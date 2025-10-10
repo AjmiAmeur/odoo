@@ -185,13 +185,17 @@
                                 <field name="active_employee" invisible="1"/>
                                 <field name="date_start" string="Detachement Start Date"/>
                                 <field name="date_end" string="Detachement End Date"/>
+                                <field name="duration_display" string="Detachement Duration" readonly="1"/>
                                 <field name="company_country_id" invisible="1"/>
                                 <field name="country_code" invisible="1"/>
                                 <field name="calendar_mismatch" invisible="1"/>
                                 
                             </group>
                             <group name="top_info_right">
-                                
+                                <field name="organisme_detachement_id" groups="!hr_detachement.group_hr_detachement_manager" options="{'no_open': True, 'no_create': True}"/>
+                                <field name="organisme_detachement_id" groups="hr_detachement.group_hr_detachement_manager"/>
+                                <field name="organisme_etranger_id" groups="!hr_detachement.group_hr_detachement_manager" options="{'no_open': True, 'no_create': True}"/>
+                                <field name="organisme_etranger_id" groups="hr_detachement.group_hr_detachement_manager"/>
                                 <field name="hr_responsible_id" widget="many2one_avatar_user" invisible="1"/>
                             </group>
                         </group>
@@ -225,6 +229,11 @@
                     <field name="kanban_state" widget="state_selection" nolabel="1"/>
                     <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'close'" decoration-success="state == 'open'"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hidden"/>
+                    <field name="organisme_detachement_id" groups="base.group_multi_company" readonly="1" optional="hidden"/>
+                    <field name="organisme_etranger_id" groups="base.group_multi_company" readonly="1" optional="hidden"/>
+                    <field name="company_country_id" groups="base.group_multi_company" readonly="1" optional="hidden"/>
+
+
                 </list>
             </field>
         </record>

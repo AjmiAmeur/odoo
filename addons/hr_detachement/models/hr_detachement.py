@@ -3,7 +3,8 @@
 
 import threading
 
-from datetime import date
+from datetime import date, timedelta
+
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
@@ -25,9 +26,14 @@ class Detachement(models.Model):
     active = fields.Boolean(default=True)
     employee_id = fields.Many2one('hr.employee', string='Employee', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", index=True)
     active_employee = fields.Boolean(related="employee_id.active", string="Active Employee")
-    date_start = fields.Date('Start Date', required=True, default=fields.Date.today, tracking=True, index=True)
-    date_end = fields.Date('End Date', tracking=True,
-        help="End date of the detachement (if it's a fixed-term detachement).")
+    date_start = fields.Date('Date debut détachement', required=True, default=fields.Date.today, tracking=True, index=True)
+    date_end = fields.Date('Date fin détachement', tracking=True,
+        help="Date fin de  détachement.")
+    duration_days = fields.Integer(compute="_compute_duration", store=False)
+    duration_months = fields.Integer(compute="_compute_duration", store=False)
+    duration_years = fields.Integer(compute="_compute_duration", store=False)
+    duration_display = fields.Char(compute="_compute_duration", store=False)
+        
     resource_calendar_id = fields.Many2one(
         'resource.calendar', 'Working Schedule', compute='_compute_employee_detachement', store=True, readonly=False,
         default=lambda self: self.env.company.resource_calendar_id.id, copy=False, index=True, tracking=True,
@@ -42,9 +48,21 @@ class Detachement(models.Model):
         tracking=True, help='Status of the detachement', default='draft')
     company_id = fields.Many2one('res.company', compute='_compute_employee_detachement', store=True, readonly=False,
         default=lambda self: self.env.company, required=True)
-    company_country_id = fields.Many2one('res.country', string="Company country", related='company_id.country_id', readonly=True)
+    company_country_id = fields.Many2one('res.country', string="Company country", related='organisme_etranger_id.country_id', readonly=True)
     country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True)
     detachements_count = fields.Integer(related='employee_id.detachements_count', groups="hr_detachement.group_hr_detachement_employee_manager")
+    organisme_detachement_id = fields.Many2one(
+        comodel_name='res.partner',
+        string='Organisme de détachement', ondelete='restrict',
+        domain="[('is_company', '=', True), ('country_id.code', '=', 'TN')]",
+        help="Organisme de détachement en tunisie.",
+        default=lambda self: self._default_organisme_detachement())
+        
+    organisme_etranger_id = fields.Many2one(
+        comodel_name='res.partner',
+        string='Organisme de détachement à l’étranger', ondelete='restrict',
+        domain="[('is_company', '=', True), ('country_id.code', '!=', 'TN')]",
+        help="Organisme de détachement à l’étranger.")
 
     """
         kanban_state:
@@ -57,6 +75,7 @@ class Detachement(models.Model):
         ('done', 'Ready'),
         ('blocked', 'Warning')
     ], string='Kanban State', default='normal', tracking=True, copy=False)
+
     def _get_hr_responsible_domain(self):
         return "[('share', '=', False), ('company_ids', 'in', company_id), ('groups_id', 'in', %s)]" % self.env.ref('hr.group_hr_user').id
 
@@ -64,6 +83,54 @@ class Detachement(models.Model):
         help='Person responsible for validating the employee\'s detachements.', domain=_get_hr_responsible_domain)
     calendar_mismatch = fields.Boolean(compute='_compute_calendar_mismatch', compute_sudo=True)
     first_detachement_date = fields.Date(related='employee_id.first_detachement_date')
+
+    @api.depends('date_start', 'date_end')
+    def _compute_duration(self):
+        for rec in self:
+            start = rec.date_start
+            end = rec.date_end or date.today()
+
+            # Si date_start vide ou date_end avant date_start → durée à 0
+            if not start or end < start:
+                rec.duration_days = 0
+                rec.duration_months = 0
+                rec.duration_years = 0
+                rec.duration_display = "0 jour"
+                continue
+
+            delta = relativedelta(end + timedelta(days=1), start)
+
+            rec.duration_years = delta.years
+            rec.duration_months = delta.months
+            rec.duration_days = delta.days
+
+            # Construction du texte lisible
+            parts = []
+            if delta.years:
+                parts.append(f"{delta.years} an{'s' if delta.years > 1 else ''}")
+            if delta.months:
+                parts.append(f"{delta.months} mois")
+            if delta.days:
+                parts.append(f"{delta.days} jour{'s' if delta.days > 1 else ''}")
+
+            rec.duration_display = " et ".join(parts) if parts else "0 jour"
+
+
+    @api.model
+    def _default_organisme_detachement(self):
+        """Retourne le partenaire TATC, ou le crée s'il n'existe pas."""
+        Partner = self.env['res.partner']
+        partenaire = Partner.search([('vat', '=', 'ATC')], limit=1)
+        if not partenaire:
+            # On crée le partenaire par défaut
+            partenaire = Partner.create({
+                'name': 'Agence Tunisienne de Coopération Technique',
+                'is_company': True,
+                'vat': 'ATC',
+                'country_id': self.env.ref('base.tn').id,  # code pays TN
+                'company_type': 'company',
+            })
+        return partenaire.id
 
     @api.depends('employee_id.resource_calendar_id', 'resource_calendar_id')
     def _compute_calendar_mismatch(self):
