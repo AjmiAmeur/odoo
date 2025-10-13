@@ -32,7 +32,7 @@ class Detachement(models.Model):
     duration_days = fields.Integer(compute="_compute_duration", store=False)
     duration_months = fields.Integer(compute="_compute_duration", store=False)
     duration_years = fields.Integer(compute="_compute_duration", store=False)
-    duration_display = fields.Char(compute="_compute_duration", store=False)
+    duration_display = fields.Char('La durée du détachement',compute="_compute_duration", store=False)
         
     resource_calendar_id = fields.Many2one(
         'resource.calendar', 'Working Schedule', compute='_compute_employee_detachement', store=True, readonly=False,
@@ -81,7 +81,6 @@ class Detachement(models.Model):
 
     hr_responsible_id = fields.Many2one('res.users', 'HR Responsible', tracking=True,
         help='Person responsible for validating the employee\'s detachements.', domain=_get_hr_responsible_domain)
-    calendar_mismatch = fields.Boolean(compute='_compute_calendar_mismatch', compute_sudo=True)
     first_detachement_date = fields.Date(related='employee_id.first_detachement_date')
 
     @api.depends('date_start', 'date_end')
@@ -132,11 +131,7 @@ class Detachement(models.Model):
             })
         return partenaire.id
 
-    @api.depends('employee_id.resource_calendar_id', 'resource_calendar_id')
-    def _compute_calendar_mismatch(self):
-        for detachement in self:
-            detachement.calendar_mismatch = detachement.resource_calendar_id != detachement.employee_id.resource_calendar_id
-
+   
     def _get_salary_costs_factor(self):
         self.ensure_one()
         return 12.0

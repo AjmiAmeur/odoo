@@ -42,7 +42,6 @@ class Employee(models.Model):
     detachement_id = fields.Many2one(
         'hr.detachement', string='Current Detachement', groups="hr.group_hr_user",
         domain="[('company_id', '=', company_id), ('employee_id', '=', id)]", help='Current detachement of the employee', copy=False)
-    calendar_mismatch = fields.Boolean(related='detachement_id.calendar_mismatch', groups="base.group_system,hr.group_hr_user")
     detachements_count = fields.Integer(compute='_compute_detachements_count', string='Detachement Count', groups="hr.group_hr_user")
     detachement_warning = fields.Boolean(string='Detachement Warning', store=True, compute='_compute_detachement_warning', groups="hr.group_hr_user")
     first_detachement_date = fields.Date(compute='_compute_first_detachement_date', groups="hr.group_hr_user", store=True)
