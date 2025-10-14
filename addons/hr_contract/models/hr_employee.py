@@ -94,7 +94,16 @@ class Employee(models.Model):
     @api.depends('contract_id', 'contract_id.state', 'contract_id.kanban_state')
     def _compute_contract_warning(self):
         for employee in self:
-            employee.contract_warning = not employee.contract_id or employee.contract_id.kanban_state == 'blocked' or employee.contract_id.state != 'open'
+            contrat = employee.contract_id
+            warning = (not contrat or contrat.kanban_state == 'blocked' or contrat.state != 'open')
+            employee.contract_warning = warning
+            # Mise à jour automatique du titularisation
+            if not warning :
+                # Si contrat  actif et valide
+                employee.titularisation = 'contractuel'
+            else : 
+                employee.titularisation = False
+
 
     def _compute_contracts_count(self):
         # read_group as sudo, since contract count is displayed on form view

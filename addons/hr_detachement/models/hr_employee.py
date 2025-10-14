@@ -92,8 +92,29 @@ class Employee(models.Model):
 
     @api.depends('detachement_id', 'detachement_id.state', 'detachement_id.kanban_state')
     def _compute_detachement_warning(self):
+        """Calcule le warning de détachement et met à jour la position administrative."""
+        # Récupération des positions une seule fois (optimisation)
+        detachement_position = self.env['hr.employee.position'].search([('name', '=', 'Détachement')], limit=1)
+        default_position = self.env['hr.employee.position'].browse(1)
+
         for employee in self:
-            employee.detachement_warning = not employee.detachement_id or employee.detachement_id.kanban_state == 'blocked' or employee.detachement_id.state != 'open'
+            det = employee.detachement_id
+
+            # Calcul du warning selon l'état du détachement
+            warning = (not det or det.kanban_state == 'blocked' or det.state != 'open')
+            employee.detachement_warning = warning
+
+            # Mise à jour automatique du poste administratif
+            if not warning and detachement_position:
+                # Si détachement actif et valide
+                employee.position_id = detachement_position.id   # affectation correcte
+            elif warning:
+                # Si détachement invalide ou bloqué
+                if default_position:
+                    employee.position_id = default_position.id   # retour à la position par défaut
+                else:
+                    employee.position_id = False                 # 🔹 vide si pas de position par défaut
+
 
     def _compute_detachements_count(self):
         # read_group as sudo, since detachement count is displayed on form view
