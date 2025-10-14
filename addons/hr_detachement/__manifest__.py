@@ -26,7 +26,6 @@ You can assign several detachements per employee.
         'report/hr_detachement_history_report_views.xml',
         'views/hr_detachement_views.xml',
         'views/hr_employee_views.xml',
-        'views/resource_calendar_views.xml',
         'views/res_config_settings_views.xml',
         'wizard/hr_departure_wizard_views.xml',
     ],

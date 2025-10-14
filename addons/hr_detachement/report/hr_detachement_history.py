@@ -32,7 +32,6 @@ class DetachementHistory(models.Model):
         ('close', 'Expired'),
         ('cancel', 'Cancelled')
     ], string='Status', readonly=True)
-    resource_calendar_id = fields.Many2one('resource.calendar', string="Working Schedule", readonly=True)
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     company_country_id = fields.Many2one('res.country', string="Company country", related='organisme_etranger_id.country_id', readonly=True)
     country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True)

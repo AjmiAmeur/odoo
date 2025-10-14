@@ -7,7 +7,6 @@
             <search string="Search Reference Detachements">
                 <field name="name"/>
                 <field name="employee_id"/>
-                <field name="resource_calendar_id"/>
                 <field name="state"/>
                 <field name="is_under_detachement"/>
                 <filter string="Running Detachements" name="open_detachements" domain="[('state', '=', 'open')]"/>
@@ -17,7 +16,6 @@
                 <filter string="Active Employees" name="active_employees" domain="[('active_employee', '=', True)]"/>
                 <group expand="0" string="Group By">
                     <filter string="Status" name='group_by_state' domain="[]" context="{'group_by': 'state'}"/>
-                    <filter string="Reference Working Time" name="group_by_resource_calendar_id" domain="[]" context="{'group_by': 'resource_calendar_id'}"/>
                 </group>
             </search>
         </field>
@@ -61,7 +59,6 @@
                             <field name="detachement_id" invisible="1"/>
                             <field name="company_country_id" invisible="1"/>
                             <field name="country_code" invisible="1"/>
-                            <field name="resource_calendar_id"/>
                             
                         </group>
                         <group>
@@ -84,7 +81,6 @@
                                     <field name="name" string="Detachement Name"/>
                                     <field name="date_start"/>
                                     <field name="date_end"/>
-                                    <field name="resource_calendar_id"/>
                                     <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'close'" decoration-success="state == 'open'"/>
                                 </list>
                             </field>
@@ -146,7 +142,6 @@
                 <field name="is_under_detachement" column_invisible="True"/>
                 <field name="name"/>
                 <field name="date_start"/>
-                <field string="Reference Working Time" name="resource_calendar_id" optional="hide"/>
                 <field name="under_detachement_state" widget="state_selection" optional="hide"
                     options="{'hide_label': False}"/>
                 <field name="state"

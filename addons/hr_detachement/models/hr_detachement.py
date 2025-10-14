@@ -22,9 +22,14 @@ class Detachement(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _mail_post_access = 'read'
 
-    name = fields.Char('Detachement Reference', required=True)
+    name = fields.Char(
+        string='Référence Détachement',
+        compute='_compute_name',
+        store=True,
+        readonly=False,
+    )
     active = fields.Boolean(default=True)
-    employee_id = fields.Many2one('hr.employee', string='Employee', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", index=True)
+    employee_id = fields.Many2one('hr.employee', string='Employé', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", index=True)
     active_employee = fields.Boolean(related="employee_id.active", string="Active Employee")
     date_start = fields.Date('Date debut détachement', required=True, default=fields.Date.today, tracking=True, index=True)
     date_end = fields.Date('Date fin détachement', tracking=True,
@@ -34,10 +39,7 @@ class Detachement(models.Model):
     duration_years = fields.Integer(compute="_compute_duration", store=False)
     duration_display = fields.Char('La durée du détachement',compute="_compute_duration", store=False)
         
-    resource_calendar_id = fields.Many2one(
-        'resource.calendar', 'Working Schedule', compute='_compute_employee_detachement', store=True, readonly=False,
-        default=lambda self: self.env.company.resource_calendar_id.id, copy=False, index=True, tracking=True,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+   
     notes = fields.Html('Notes')
     state = fields.Selection([
         ('draft', 'New'),
@@ -48,7 +50,7 @@ class Detachement(models.Model):
         tracking=True, help='Status of the detachement', default='draft')
     company_id = fields.Many2one('res.company', compute='_compute_employee_detachement', store=True, readonly=False,
         default=lambda self: self.env.company, required=True)
-    company_country_id = fields.Many2one('res.country', string="Company country", related='organisme_etranger_id.country_id', readonly=True)
+    company_country_id = fields.Many2one('res.country', string="Pays de détachement", related='organisme_etranger_id.country_id', readonly=True)
     country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True)
     detachements_count = fields.Integer(related='employee_id.detachements_count', groups="hr_detachement.group_hr_detachement_employee_manager")
     organisme_detachement_id = fields.Many2one(
@@ -82,7 +84,16 @@ class Detachement(models.Model):
     hr_responsible_id = fields.Many2one('res.users', 'HR Responsible', tracking=True,
         help='Person responsible for validating the employee\'s detachements.', domain=_get_hr_responsible_domain)
     first_detachement_date = fields.Date(related='employee_id.first_detachement_date')
-
+    @api.depends('employee_id.identification_id', 'date_start')
+    def _compute_name(self):
+        """Génère automatiquement le nom du détachement."""
+        for rec in self:
+            if rec.employee_id and rec.date_start:
+                rec.name = f"{rec.employee_id.identification_id} - {rec.date_start.strftime('%d/%m/%Y')}"
+            elif rec.employee_id:
+                rec.name = rec.employee_id.identification_id
+            else:
+                rec.name = False
     @api.depends('date_start', 'date_end')
     def _compute_duration(self):
         for rec in self:
@@ -132,14 +143,11 @@ class Detachement(models.Model):
         return partenaire.id
 
    
-    def _get_salary_costs_factor(self):
-        self.ensure_one()
-        return 12.0
+    
 
     @api.depends('employee_id')
     def _compute_employee_detachement(self):
         for detachement in self.filtered('employee_id'):
-            detachement.resource_calendar_id = detachement.employee_id.resource_calendar_id
             detachement.company_id = detachement.employee_id.company_id
 
     
@@ -300,10 +308,7 @@ class Detachement(models.Model):
   
 
 
-    def _is_fully_flexible(self):
-        """ return True if detachement has a fully flexible working calendar """
-        self.ensure_one()
-        return not self.resource_calendar_id
+    
 
     def write(self, vals):
         old_state = {c.id: c.state for c in self}
@@ -331,12 +336,7 @@ class Detachement(models.Model):
             for detachement in self.filtered(lambda c: c.state == 'open'):
                 detachement.state = 'close'
 
-        if 'resource_calendar_id' in vals:
-            calendar = vals['resource_calendar_id']
-            self.filtered(
-                lambda c: c.state == 'open' or (c.state == 'draft' and c.kanban_state == 'done' and c.employee_id.detachements_count == 1)
-            ).employee_id.resource_calendar_id = calendar
-
+        
         if 'state' in vals and 'kanban_state' not in vals:
             self.write({'kanban_state': 'normal'})
 
@@ -350,8 +350,7 @@ class Detachement(models.Model):
             lambda c: c.state == 'open' or (c.state == 'draft' and c.kanban_state == 'done' and c.employee_id.detachements_count == 1)
         )
         # sync detachement calendar -> calendar employee
-        for detachement in open_detachements.filtered(lambda c: c.employee_id):
-            detachement.employee_id.resource_calendar_id = detachement.resource_calendar_id
+        
         return detachements
 
     def _track_subtype(self, init_values):

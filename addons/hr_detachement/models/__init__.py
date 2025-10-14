@@ -5,6 +5,3 @@ from . import hr_employee
 from . import ir_ui_menu
 from . import res_company
 from . import res_config_settings
-from . import resource
-from . import resource_calendar_leaves
-from . import resource_resource

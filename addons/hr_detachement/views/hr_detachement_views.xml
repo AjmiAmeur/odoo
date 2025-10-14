@@ -35,7 +35,6 @@
                             groups="hr_detachement.group_hr_detachement_manager"
                             context="{
                                 'default_employee_id': id,
-                                'default_resource_calendar_id': resource_calendar_id.id or False,
                                 'from_action_open_detachement': True,
                             }"
                             invisible="employee_type not in ['employee', 'student', 'trainee','enseignant']">
@@ -99,7 +98,7 @@
             <field name="model">hr.detachement</field>
             <field name="arch" type="xml">
                 <search string="Search Detachement">
-                    <field name="name" string="Detachement"/>
+                    <field name="name" string="Détachement"/>
                     <field name="date_start"/>
                     <field name="date_end"/>
                     <field name="employee_id"/>
@@ -131,7 +130,7 @@
             <field name="name">hr.detachement.form</field>
             <field name="model">hr.detachement</field>
             <field name="arch" type="xml">
-                <form string="Current Detachement">
+                <form string="Détachement en cours">
                     <field name="detachements_count" invisible="1"/>
                     <header invisible="not id">
                         <field name="state" groups="!hr_detachement.group_hr_detachement_manager" widget="statusbar"/>
@@ -151,10 +150,10 @@
                                         <field name="detachements_count"/>
                                     </span>
                                     <span invisible="detachements_count == 1" class="o_stat_text" >
-                                        Detachements
+                                        Détachements
                                     </span>
                                     <span invisible="detachements_count &gt; 1" class="o_stat_text">
-                                        Detachement
+                                        Détachement
                                     </span>
                                 </div>
                             </button>
@@ -162,7 +161,7 @@
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <div class="oe_title pe-0 w-100 mw-100" name="title">
                             <h1 class="d-flex flex-row justify-content-between">
-                                <field name="name" class="text-truncate" placeholder="Detachement Reference"/>
+                                <field name="name" class="text-truncate" placeholder="Référence Détachement"/>
                                 <field name="kanban_state"
                                     class="d-flex align-items-center"
                                     groups="!hr_detachement.group_hr_detachement_manager"
@@ -183,9 +182,9 @@
                                 <field name="company_id" invisible="1"/>
                                 <field name="employee_id" widget="many2one_avatar_employee"/>
                                 <field name="active_employee" invisible="1"/>
-                                <field name="date_start" string="Detachement Start Date"/>
-                                <field name="date_end" string="Detachement End Date"/>
-                                <field name="duration_display" string="Detachement Duration" readonly="1"/>
+                                <field name="date_start" />
+                                <field name="date_end" />
+                                <field name="duration_display"  readonly="1"/>
                                 <field name="country_code" invisible="1"/>
                                 
                             </group>
@@ -219,7 +218,7 @@
             <field name="name">hr.detachement.list</field>
             <field name="model">hr.detachement</field>
             <field name="arch" type="xml">
-                <list string="Detachements" multi_edit="1" sample="1" default_order='date_start DESC'>
+                <list string="Détachements" multi_edit="1" sample="1" default_order='date_start DESC'>
                     <field name="company_id" column_invisible="True"/>
                     <field name="employee_id" readonly="1" widget="many2one_avatar_employee"/>
                     <field name="name" readonly="1"/>
@@ -289,7 +288,7 @@
         </record>
 
         <record id="action_hr_detachement" model="ir.actions.act_window">
-            <field name="name">Detachements</field>
+            <field name="name">Détachements</field>
             <field name="res_model">hr.detachement</field>
             <field name="path">employee-detachements</field>
             <field name="view_mode">list,kanban,form,activity</field>
