@@ -21,7 +21,14 @@ class Contract(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _mail_post_access = 'read'
 
-    name = fields.Char('Contract Reference', required=True)
+
+    name = fields.Char(
+        string='Référence Contrat',
+        compute='_compute_name',
+        store=True,
+        readonly=False,
+    )
+    
     active = fields.Boolean(default=True)
     structure_type_id = fields.Many2one('hr.payroll.structure.type', string="Salary Structure Type", compute="_compute_structure_type_id", readonly=False, store=True, tracking=True)
     employee_id = fields.Many2one('hr.employee', string='Employee', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", index=True)
@@ -78,6 +85,16 @@ class Contract(models.Model):
         help='Person responsible for validating the employee\'s contracts.', domain=_get_hr_responsible_domain)
     calendar_mismatch = fields.Boolean(compute='_compute_calendar_mismatch', compute_sudo=True)
     first_contract_date = fields.Date(related='employee_id.first_contract_date')
+    @api.depends('employee_id.identification_id', 'date_start')
+    def _compute_name(self):
+        """Génère automatiquement le nom du Contrat."""
+        for rec in self:
+            if rec.employee_id and rec.date_start:
+                rec.name = f"C/{rec.employee_id.identification_id} - {rec.date_start.strftime('%d/%m/%Y')}"
+            elif rec.employee_id:
+                rec.name = "C/"+rec.employee_id.identification_id
+            else:
+                rec.name = False
 
     @api.depends('employee_id.resource_calendar_id', 'resource_calendar_id')
     def _compute_calendar_mismatch(self):
