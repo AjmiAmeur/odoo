@@ -89,9 +89,9 @@ class Detachement(models.Model):
         """Génère automatiquement le nom du détachement."""
         for rec in self:
             if rec.employee_id and rec.date_start:
-                rec.name = f"{rec.employee_id.identification_id} - {rec.date_start.strftime('%d/%m/%Y')}"
+                rec.name = f"D/{rec.employee_id.identification_id} - {rec.date_start.strftime('%d/%m/%Y')}"
             elif rec.employee_id:
-                rec.name = rec.employee_id.identification_id
+                rec.name = "D/"+rec.employee_id.identification_id
             else:
                 rec.name = False
     @api.depends('date_start', 'date_end')
