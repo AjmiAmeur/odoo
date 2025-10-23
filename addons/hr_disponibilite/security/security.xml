@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record model="ir.module.category" id="base.module_category_human_resources_disponibilites">
+            <field name="description">Permettre à l’utilisateur de consulter et gérer les mises en disponibilité depuis l’application Employé.</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="hr_disponibilite.group_hr_disponibilite_employee_manager" model="res.groups">
+            <field name="name">Employee Manager</field>
+            <field name="category_id" ref="base.module_category_human_resources_disponibilites"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="hr_disponibilite.group_hr_disponibilite_manager" model="res.groups">
+            <field name="name">Administrator</field>
+            <field name="category_id" ref="base.module_category_human_resources_disponibilites"/>
+            <field name="implied_ids" eval="[(4, ref('hr_disponibilite.group_hr_disponibilite_employee_manager')), (4, ref('hr.group_hr_user'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+
+        <record id="base.default_user" model="res.users">
+            <field name="groups_id" eval="[(4,ref('hr_disponibilite.group_hr_disponibilite_manager'))]"/>
+        </record>
+
+        <record id="ir_rule_hr_disponibilite_history_multi_company" model="ir.rule">
+            <field name="name">HR Disponibilite History: Multi Company</field>
+            <field name="model_id" ref="model_hr_disponibilite_history"/>
+            <field name="domain_force">['|', ('employee_id.company_id', '=', False), ('employee_id.company_id', 'in', company_ids)]</field>
+        </record>
+
+        <record id="ir_rule_hr_disponibilite_employee_manager" model="ir.rule">
+            <field name="name">HR Disponibilite: Employee Manager</field>
+            <field name="model_id" ref="model_hr_disponibilite"/>
+            <field name="groups" eval="[(4, ref('hr_disponibilite.group_hr_disponibilite_employee_manager'))]"/>
+            <field name="domain_force">['|', ('employee_id.parent_id.user_id', '=', user.id), ('employee_id.user_id', '=', user.id)]</field>
+        </record>
+
+        <record id="ir_rule_hr_disponibilite_manager" model="ir.rule">
+            <field name="name">HR Disponibilite: Disponibilite Manager</field>
+            <field name="model_id" ref="model_hr_disponibilite"/>
+            <field name="groups" eval="[(4, ref('hr_disponibilite.group_hr_disponibilite_manager'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <record id="ir_rule_hr_disponibilite_multi_company" model="ir.rule">
+            <field name="name">HR Disponibilite: Multi Company</field>
+            <field name="model_id" ref="model_hr_disponibilite"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+
+        
+
+    </data>
+</odoo>

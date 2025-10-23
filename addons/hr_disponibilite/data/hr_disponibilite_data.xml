@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- disponibilite-related subtypes for messaging / Chatter -->
+        <record id="mt_disponibilite_pending" model="mail.message.subtype">
+            <field name="name">To Renew</field>
+            <field name="res_model">hr.disponibilite</field>
+            <field name="default" eval="True"/>
+            <field name="description">La mise en disponibilité arrive à expiration</field>
+        </record>
+        <record id="mt_disponibilite_close" model="mail.message.subtype">
+            <field name="name">Expired</field>
+            <field name="res_model">hr.disponibilite</field>
+            <field name="default" eval="False"/>
+            <field name="description">La mise en disponibilité est expirée</field>
+        </record>
+        <!-- Department-related (parent) subtypes for messaging / Chatter -->
+        <record id="mt_department_disponibilite_pending" model="mail.message.subtype">
+            <field name="name">Mise en disponibilité à renouveler prochainement</field>
+            <field name="res_model">hr.department</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" ref="mt_disponibilite_pending"/>
+            <field name="description">Mise en disponibilité arrivant à expiration</field>
+        </record>
+
+        <!-- Expired Soon -->
+        <record id="ir_cron_data_disponibilite_update_state" model="ir.cron">
+            <field name="name">HR Mise à jour de l’état de la mise en disponibilité</field>
+            <field name="model_id" ref="model_hr_disponibilite"/>
+            <field name="state">code</field>
+            <field name="code">model.with_context(from_cron=True).update_state()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+        </record>
+    </data>
+</odoo>

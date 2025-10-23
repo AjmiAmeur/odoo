@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="hr_hr_employee_view_form2" model="ir.ui.view">
+            <field name="name">hr.hr.employee.view.form2</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="priority" eval="70" />
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//sheet" position="inside">
+                        <field name="disponibilite_warning" invisible="1"/>
+                    </xpath>
+                    <xpath expr="//page[@name='hr_settings']//field[@name='employee_type']" position="after">
+                        <field name="first_disponibilite_date" invisible="1"/>
+                    </xpath>
+                    
+                </data>
+            </field>
+        </record>
+
+        <!-- This part of the view is defined separately as we want to give priority to the smartbutton. -->
+        <record id="hr_hr_employee_view_form3" model="ir.ui.view">
+            <field name="name">hr.hr.employee.view.form3</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="priority" eval="2" />
+            <field name="arch" type="xml">
+                <data>
+                    <div name="button_box" position="inside">
+                        <button name="action_open_disponibilite"
+                            class="oe_stat_button"
+                            icon="fa-user-times"
+                            type="object"
+                            groups="hr_disponibilite.group_hr_disponibilite_manager"
+                            context="{
+                                'default_employee_id': id,
+                                'from_action_open_disponibilite': True,
+                            }"
+                            invisible="employee_type not in ['employee', 'student', 'trainee','enseignant']">
+                            <!-- <div invisible="not first_disponibilite_date" class="o_stat_info">
+                                <span class="o_stat_text text-success" invisible="disponibilite_warning" title="En mise en disponibilité depuis"> En mise en disponibilité depuis</span>
+                                <span class="o_stat_value text-success" invisible="disponibilite_warning">
+                                    <field name="first_disponibilite_date" readonly="1"/>
+                                </span>
+                                <span class="o_stat_text text-danger" invisible="not disponibilite_warning" title="En mise en disponibilité depuis">
+                                    En mise en disponibilité depuis
+                                </span>
+                                <span class="o_stat_value text-danger" invisible="not disponibilite_warning">
+                                    <field name="first_disponibilite_date" readonly="1"/>
+                                </span>
+                            </div> -->
+                            <div  class="o_stat_info">
+                                <span  class="o_stat_value ">
+                                    <field name="disponibilites_count"/>
+                                </span>
+                                <span invisible="disponibilites_count != 1" class="o_stat_text " >
+                                    Mise en disponibilité
+                                </span>
+                                <span invisible="disponibilites_count == 1" class="o_stat_text ">
+                                    Mises en disponibilité
+                                </span>
+                            </div>
+                        </button>
+                    </div>
+                </data>
+            </field>
+        </record>
+
+        <record id="hr_employee_view_search" model="ir.ui.view">
+            <field name="name">hr.employee.view.search</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_filter"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//filter[@name='inactive']" position="before">
+                        <separator/>
+                        <filter string="Disponibilite Warning" name="with_disponibilite_warning" domain="[('disponibilite_warning', '=', True)]"/>
+                        <separator/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="hr_user_view_form" model="ir.ui.view">
+            <field name="name">hr.user.preferences.view.form.disponibilite.inherit</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="hr.res_users_view_form_profile"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='employee_bank_account_id']" position="replace">
+                    <field name="employee_bank_account_id" context="{'display_partner':True}" readonly="not can_edit"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="hr_disponibilite_view_search" model="ir.ui.view">
+            <field name="name">hr.disponibilite.search</field>
+            <field name="model">hr.disponibilite</field>
+            <field name="arch" type="xml">
+                <search string="Search Disponibilite">
+                    <field name="name" string="Mise en disponibilité"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                    <field name="employee_id"/>
+                    <filter string="Running Disponibilites" name="running" domain="[('state', '=', 'open')]"/>
+                    <filter string="Disponibilites to review" name="not_running" domain="[('state', 'in', ['draft', 'close'])]"/>
+                    <separator />
+                    <filter string="Start Date" name="start_date" date="date_start"/>
+                    <filter string="End Date" name="end_date" date="date_end"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <filter string="Late Activities" name="activities_overdue"
+                        domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        help="Show all records which have a next action date before today"/>
+                    <filter string="Today Activities" name="activities_today"
+                        domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Future Activities" name="activities_upcoming_all"
+                        domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Status" name="group_by_state" domain="[]" context="{'group_by': 'state'}"/>
+                        <filter string="Employee" name="group_by_employee" domain="[]" context="{'group_by': 'employee_id'}"/>
+                        <filter string="Start Date" name="group_by_date_start" domain="[]" context="{'group_by': 'date_start'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="hr_disponibilite_view_form" model="ir.ui.view">
+            <field name="name">hr.disponibilite.form</field>
+            <field name="model">hr.disponibilite</field>
+            <field name="arch" type="xml">
+                <form string="Mise en disponibilité en cours">
+                    <field name="disponibilites_count" invisible="1"/>
+                    <header invisible="not id">
+                        <field name="state" groups="!hr_disponibilite.group_hr_disponibilite_manager" widget="statusbar"/>
+                        <field name="state" groups="hr_disponibilite.group_hr_disponibilite_manager" widget="statusbar" options="{'clickable': '1'}"/>
+                    </header>
+                    <sheet>
+                        <field name="state" invisible="1"/>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_open_disponibilite_list"
+                                class="oe_stat_button"
+                                icon="fa-user-times"
+                                type="object"
+                                invisible="disponibilites_count == 0"
+                                groups="hr_disponibilite.group_hr_disponibilite_employee_manager">
+                                <div class="o_stat_info">
+                                    <span class="o_stat_value">
+                                        <field name="disponibilites_count"/>
+                                    </span>
+                                    <span invisible="disponibilites_count == 1" class="o_stat_text" >
+                                        Mise en disponibilité
+                                    </span>
+                                    <span invisible="disponibilites_count &gt; 1" class="o_stat_text">
+                                        mises en disponibilité
+                                    </span>
+                                </div>
+                            </button>
+                        </div>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <div class="oe_title pe-0 w-100 mw-100" name="title">
+                            <h1 class="d-flex flex-row justify-content-between">
+                                <field name="name" class="text-truncate" placeholder="Référence Mise en disponibilité"/>
+                                <field name="kanban_state"
+                                    class="d-flex align-items-center"
+                                    groups="!hr_disponibilite.group_hr_disponibilite_manager"
+                                    widget="state_selection" readonly="1"/>
+                                <field name="kanban_state"
+                                    class="d-flex align-items-center"
+                                    groups="hr_disponibilite.group_hr_disponibilite_manager"
+                                    widget="state_selection" readonly="0"/>
+                            </h1>
+                            <h2>
+                                <field name="company_id" groups="base.group_multi_company" invisible="1"/>
+                            </h2>
+                        </div>
+                        <group name="top_info">
+                            <group name="top_info_left">
+                                <field name="active" invisible="1"/>
+                                <!-- employee_id = fields.Many2one('hr.employee', string='Employee', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]") -->
+                                <field name="company_id" invisible="1"/>
+                                <field name="employee_id" widget="many2one_avatar_employee"/>
+                                <field name="active_employee" invisible="1"/>
+                                <field name="date_start" />
+                                <field name="date_end" />
+                                <field name="duration_display"  readonly="1"/>
+                                <field name="country_code" invisible="1"/>
+                                
+                            </group>
+                            <group name="top_info_right">
+                                <!-- <field name="organisme_etranger_id" groups="!hr_disponibilite.group_hr_disponibilite_manager" options="{'no_open': True, 'no_create': True}"/>
+                                <field name="organisme_etranger_id" groups="hr_disponibilite.group_hr_disponibilite_manager"/> -->
+                                <!-- <field name="company_country_id" widget="selection" readonly="1"/> -->
+                                <!-- <field name="hr_responsible_id" widget="many2one_avatar_user" invisible="0"/> -->
+                                <field name="motif_id" groups="hr_disponibilite.group_hr_disponibilite_manager"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            
+                            <page string="Details" name="other" groups="hr_disponibilite.group_hr_disponibilite_manager">
+                                <group name="disponibilite_details_0"/>
+                                <group name="disponibilite_details" col="2"/>
+                                <group name="disponibilite_details_2"/>
+                                <group name="notes_group" string="Notes">
+                                    <field name="notes" nolabel="1" placeholder="Type in notes about this disponibilite..."/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <chatter groups="hr_disponibilite.group_hr_disponibilite_manager"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_disponibilite_view_tree" model="ir.ui.view">
+            <field name="name">hr.disponibilite.list</field>
+            <field name="model">hr.disponibilite</field>
+            <field name="arch" type="xml">
+                <list string="Mise en disponibilités" multi_edit="1" sample="1" default_order='date_start DESC'>
+                    <field name="company_id" column_invisible="True"/>
+                    <field name="employee_id" readonly="1" widget="many2one_avatar_employee"/>
+                    <field name="name" readonly="1"/>
+                    <field name="date_start" readonly="1"/>
+                    <field name="date_end" readonly="1"/>
+                    <field name="duration_display" string="Période de mise en disponibilité" readonly="1"/>
+                    <field name="motif_id" readonly="1"/>
+                    <field name="kanban_state" widget="state_selection" nolabel="1"/>
+                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'close'" decoration-success="state == 'open'"/>
+                    <field name="company_id" string="Établissement" groups="base.group_multi_company" readonly="1" optional="hidden"/>
+                    <field name="company_country_id" groups="base.group_multi_company" readonly="1" optional="hidden"/>
+                    
+
+
+                </list>
+            </field>
+        </record>
+
+        <record id="hr_disponibilite_view_kanban" model="ir.ui.view">
+            <field name="name">hr.disponibilite.kanban</field>
+            <field name="model">hr.disponibilite</field>
+            <field name="arch" type="xml">
+                <kanban default_order="date_end" sample="1">
+                    <field name="activity_state"/>
+                    <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
+                    <templates>
+                    <t t-name="menu" groups="hr_disponibilite.group_hr_disponibilite_manager">
+                        <t t-if="widget.editable"><a role="menuitem" type="open" class="dropdown-item">Editer Mise en disponibilité</a></t>
+                        <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                    </t>
+                    <t t-name="card">
+                        <field class="fw-bold fs-5" name="name"/>
+                        <div class="text-muted" name="div_date_id">
+                            From <field name="date_start"/>
+                            <t t-if="record.date_end.raw_value">
+                                To <field name="date_end"/>
+                            </t>
+                        </div>
+                         <field name="motif_id"/>
+                        <footer>
+                            <field name="activity_ids" widget="kanban_activity"/>
+                            <div class="d-flex ms-auto">
+                                <field class="mr4" name="kanban_state" widget="state_selection"/>
+                                <field name="employee_id" widget="many2one_avatar_employee"/>
+                            </div>
+                        </footer>
+                    </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="hr_disponibilite_view_activity" model="ir.ui.view">
+            <field name="name">hr.disponibilite.activity</field>
+            <field name="model">hr.disponibilite</field>
+            <field name="arch" type="xml">
+                <activity string="Disponibilites">
+                    <field name="employee_id"/>
+                    <templates>
+                        <div t-name="activity-box">
+                            <img class="rounded" t-att-src="activity_image('hr.employee', 'avatar_128', record.employee_id.raw_value)" t-att-title="record.employee_id.value" t-att-alt="record.employee_id.value"/>
+                            <div class="ms-2">
+                                <field name="name" display="full" class="o_text_block"/>
+                            </div>
+                        </div>
+                    </templates>
+                </activity>
+            </field>
+        </record>
+
+        <record id="action_hr_disponibilite" model="ir.actions.act_window">
+            <field name="name">Mise en disponibilités</field>
+            <field name="res_model">hr.disponibilite</field>
+            <field name="path">employee-disponibilites</field>
+            <field name="view_mode">list,kanban,form,activity</field>
+            <field name="domain">[('employee_id', '!=', False)]</field>
+            <field name="context">{'search_default_group_by_state': 1}</field>
+            <field name="search_view_id" ref="hr_disponibilite_view_search"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new disponibilite
+              </p>
+            </field>
+        </record>
+
+        <menuitem
+            id="menu_human_resources_configuration_disponibilite"
+            name="Mises en disponibilité"
+            parent="hr.menu_human_resources_configuration"
+            sequence="25"/>
+
+        <menuitem
+            id="hr_menu_disponibilite"
+            name="Mises en disponibilité"
+            action="hr_disponibilite.action_hr_disponibilite"
+            parent="hr.menu_hr_employee_payroll"
+            sequence="6"
+            groups="hr_disponibilite.group_hr_disponibilite_manager"/>
+
+        <menuitem
+            id="menu_hr_employee_disponibilites"
+            name="Mises en disponibilité"
+            action="hr_disponibilite.action_hr_disponibilite"
+            parent="hr.menu_hr_root"
+            sequence="5"/>
+
+        <record id="hr.menu_resource_calendar_view" model="ir.ui.menu">
+            <field name="parent_id" ref="menu_human_resources_configuration_disponibilite"/>
+        </record>
+</odoo>

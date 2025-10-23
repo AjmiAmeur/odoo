@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_view_search" model="ir.ui.view">
+        <field name="name">hr.employee.view.search.inherit.disponibilite</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='parent_id']" position="after">
+                <field name="first_disponibilite_date"/>
+            </xpath>
+            <xpath expr="//filter[@name='group_start']" position="attributes">
+                <attribute name="context">{'group_by': 'first_disponibilite_date'}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_employee_tree" model="ir.ui.view">
+        <field name="name">hr.employee.list</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_tree"></field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='work_email']" position="after">
+                <field name="first_disponibilite_date" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+
+
+    <record id="view_employee_public_form" model="ir.ui.view">
+        <field name="model">hr.employee.public</field>
+        <field name="inherit_id" ref="hr.hr_employee_public_view_form"></field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='work_email']" position="after">
+                <field name="is_manager" invisible="1"/>
+                <field name="first_disponibilite_date" invisible="not is_manager"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

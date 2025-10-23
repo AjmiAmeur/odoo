@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+   
+
+    <data noupdate="1">
+        <record id="base.user_demo" model="res.users">
+            <field name="groups_id" eval="[
+                (3, ref('hr_disponibilite.group_hr_disponibilite_manager')),
+                (3, ref('hr_disponibilite.group_hr_disponibilite_employee_manager'))]"/>
+        </record>
+    </data>
+
+
+
+</odoo>
