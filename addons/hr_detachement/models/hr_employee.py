@@ -37,11 +37,10 @@ class Employee(models.Model):
     _inherit = "hr.employee"
 
     legal_name = fields.Char(compute='_compute_legal_name', store=True, readonly=False, groups="hr.group_hr_user")
-    vehicle = fields.Char(string='Company Vehicle', groups="hr.group_hr_user")
     detachement_ids = fields.One2many('hr.detachement', 'employee_id', string='Employee Detachements', groups="hr.group_hr_user")
     detachement_id = fields.Many2one(
-        'hr.detachement', string='Current Detachement', groups="hr.group_hr_user",
-        domain="[('company_id', '=', company_id), ('employee_id', '=', id)]", help='Current detachement of the employee', copy=False)
+        'hr.detachement', string='Détachement actuel', groups="hr.group_hr_user",
+        domain="[('company_id', '=', company_id), ('employee_id', '=', id)]", help='Détachement actuel de l’employé', copy=False)
     detachements_count = fields.Integer(compute='_compute_detachements_count', string='Detachement Count', groups="hr.group_hr_user")
     detachement_warning = fields.Boolean(string='Detachement Warning', store=True, compute='_compute_detachement_warning', groups="hr.group_hr_user")
     first_detachement_date = fields.Date(compute='_compute_first_detachement_date', groups="hr.group_hr_user", store=True)

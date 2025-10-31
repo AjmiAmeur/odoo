@@ -20,11 +20,11 @@ class DetachementHistory(models.Model):
 
     name = fields.Char('Detachement Name', readonly=True)
     date_hired = fields.Date('Hire Date', readonly=True)
-    date_start = fields.Date('Start Date', readonly=True)
-    date_end = fields.Date('End Date', readonly=True)
+    date_start = fields.Date('Date debut détachement', readonly=True)
+    date_end = fields.Date('Date fin détachement', readonly=True)
     employee_id = fields.Many2one('hr.employee', string='Employee', readonly=True)
     active_employee = fields.Boolean('Active Employee', readonly=True)
-    is_under_detachement = fields.Boolean('Is Currently Under Detachement', readonly=True)
+    is_under_detachement = fields.Boolean('Est actuellement en détachement', readonly=True)
     hr_responsible_id = fields.Many2one('res.users', string='HR Responsible', readonly=True)
     state = fields.Selection([
         ('draft', 'New'),
@@ -50,7 +50,7 @@ class DetachementHistory(models.Model):
     under_detachement_state = fields.Selection([
         ('done', 'Under Detachement'),
         ('blocked', 'Not Under Detachement')
-    ], string='Detachementual Status', compute='_compute_under_detachement_state')
+    ], string='Statut du détachement', compute='_compute_under_detachement_state')
     activity_state = fields.Selection(related='detachement_id.activity_state')
 
     @api.depends('detachement_ids')

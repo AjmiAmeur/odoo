@@ -36,13 +36,13 @@ class EmployeeBase(models.AbstractModel):
 class Employee(models.Model):
     _inherit = "hr.employee"
 
-    disponibilite_ids = fields.One2many('hr.disponibilite', 'employee_id', string='Employee Disponibilites', groups="hr.group_hr_user")
+    disponibilite_ids = fields.One2many('hr.disponibilite', 'employee_id', string='Mises en disponibilité de l’employé', groups="hr.group_hr_user")
     disponibilite_id = fields.Many2one(
-        'hr.disponibilite', string='Current Disponibilite', groups="hr.group_hr_user",
+        'hr.disponibilite', string='Mise en disponibilité actuelle', groups="hr.group_hr_user",
         domain="[('company_id', '=', company_id), ('employee_id', '=', id)]", help='Current disponibilite of the employee', copy=False)
-    disponibilites_count = fields.Integer(compute='_compute_disponibilites_count', string='Disponibilite Count', groups="hr.group_hr_user")
-    disponibilite_warning = fields.Boolean(string='Disponibilite Warning', store=True, compute='_compute_disponibilite_warning', groups="hr.group_hr_user")
-    first_disponibilite_date = fields.Date(compute='_compute_first_disponibilite_date', groups="hr.group_hr_user", store=True)
+    disponibilites_count = fields.Integer(compute='_compute_disponibilites_count', string='Nombre de mises en disponibilité', groups="hr.group_hr_user")
+    disponibilite_warning = fields.Boolean(string='Alerte de mise en disponibilité', store=True, compute='_compute_disponibilite_warning', groups="hr.group_hr_user")
+    first_disponibilite_date = fields.Date(string='Date de première mise en disponibilité',compute='_compute_first_disponibilite_date', groups="hr.group_hr_user", store=True)
 
     
     def _get_first_disponibilites(self):

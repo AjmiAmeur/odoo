@@ -20,8 +20,8 @@ class DisponibiliteHistory(models.Model):
 
     name = fields.Char('Référence de la Mise en disponibilité', readonly=True)
     date_hired = fields.Date('Hire Date', readonly=True)
-    date_start = fields.Date('Start Date', readonly=True)
-    date_end = fields.Date('End Date', readonly=True)
+    date_start = fields.Date('Date de début de la mise en disponibilité', readonly=True)
+    date_end = fields.Date('Date de fin de la mise en disponibilité', readonly=True)
     employee_id = fields.Many2one('hr.employee', string='Employee', readonly=True)
     active_employee = fields.Boolean('Active Employee', readonly=True)
     is_under_disponibilite = fields.Boolean('Est actuellement en mise en disponibilité', readonly=True)

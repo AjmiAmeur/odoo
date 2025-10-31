@@ -54,7 +54,7 @@ class Disponibilite(models.Model):
     company_country_id = fields.Many2one('res.country', string="Company country", related='company_id.country_id', readonly=True)
     country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True)
 
-    disponibilites_count = fields.Integer(related='employee_id.disponibilites_count', groups="hr_disponibilite.group_hr_disponibilite_employee_manager")
+    disponibilites_count = fields.Integer(string='Nombre de mises en disponibilité',related='employee_id.disponibilites_count', groups="hr_disponibilite.group_hr_disponibilite_employee_manager")
 
    
 

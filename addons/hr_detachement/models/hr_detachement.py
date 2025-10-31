@@ -179,7 +179,7 @@ class Detachement(models.Model):
             if self.search_count(domain):
                 raise ValidationError(
                     _(
-                        'An employee can only have one detachement at the same time. (Excluding Draft and Cancelled detachements).\n\nEmployee: %(employee_name)s',
+                        'AUn employé ne peut avoir qu’un seul détachement à la fois (hors détachements à l’état Brouillon ou Annulé).\n\nEmployé : %(employee_name)s',
                         employee_name=detachement.employee_id.name
                     )
                 )
@@ -189,7 +189,7 @@ class Detachement(models.Model):
         for detachement in self:
             if detachement.date_end and detachement.date_start > detachement.date_end:
                 raise ValidationError(_(
-                    'Detachement %(detachement)s: start date (%(start)s) must be earlier than detachement end date (%(end)s).',
+                    'Détachement %(detachement)s : la date de début (%(start)s) doit être antérieure à la date de fin du détachement (%(end)s).',
                     detachement=detachement.name, start=detachement.date_start, end=detachement.date_end,
                 ))
 
@@ -221,7 +221,7 @@ class Detachement(models.Model):
                 user_id=detachement.hr_responsible_id.id or self.env.uid)
             detachement.message_post(
                 body=_(
-                    "According to the detachement's end date, this detachement has been put in red on the %s. Please advise and correct.",
+                    "Selon la date de fin du détachement, ce détachement a été marqué en rouge sur le %s. Veuillez vérifier et corriger.",
                     fields.Date.today()
                 )
             )
@@ -233,7 +233,7 @@ class Detachement(models.Model):
                 user_id=detachement.hr_responsible_id.id or self.env.uid)
             detachement.message_post(
                 body=_(
-                    "According to Employee's Working Permit Expiration Date, this detachement has been put in red on the %s. Please advise and correct.",
+                    "Selon la date d’expiration du permis de travail de l’employé, ce détachement a été marqué en rouge sur le %s. Veuillez vérifier et corriger.",
                     fields.Date.today()
                 )
             )

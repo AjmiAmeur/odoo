@@ -4,15 +4,15 @@
         <field name="name">hr.detachement.history.search</field>
         <field name="model">hr.detachement.history</field>
         <field name="arch" type="xml">
-            <search string="Search Reference Detachements">
+            <search string="Rechercher une référence de détachement">
                 <field name="name"/>
                 <field name="employee_id"/>
                 <field name="state"/>
                 <field name="is_under_detachement"/>
-                <filter string="Running Detachements" name="open_detachements" domain="[('state', '=', 'open')]"/>
-                <filter string="Detachements to Review" name="detachement_to_review" domain="['|', ('state', 'in', ['draft', 'close', 'cancel']), ('is_under_detachement', '!=', True)]"/>
-                <filter string="No Detachements" name="no_detachements" domain="[('detachement_id', '=', False)]"/>
-                <filter string="Currently Under Detachement" name="currently_under_detachement" domain="[('is_under_detachement', '=', True)]"/>
+                <filter string="Détachements en cours" name="open_detachements" domain="[('state', '=', 'open')]"/>
+                <filter string="DDétachements à examiner" name="detachement_to_review" domain="['|', ('state', 'in', ['draft', 'close', 'cancel']), ('is_under_detachement', '!=', True)]"/>
+                <filter string="Aucun détachement" name="no_detachements" domain="[('detachement_id', '=', False)]"/>
+                <filter string="Actuellement en détachement" name="currently_under_detachement" domain="[('is_under_detachement', '=', True)]"/>
                 <filter string="Active Employees" name="active_employees" domain="[('active_employee', '=', True)]"/>
                 <group expand="0" string="Group By">
                     <filter string="Status" name='group_by_state' domain="[]" context="{'group_by': 'state'}"/>
