@@ -31,6 +31,10 @@ class Detachement(models.Model):
     active = fields.Boolean(default=True)
     employee_id = fields.Many2one('hr.employee', string='Employé', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", index=True)
     active_employee = fields.Boolean(related="employee_id.active", string="Active Employee")
+    grade_id = fields.Many2one('hr.employee.grade', string="Grade", related='employee_id.grade_id', readonly=True, store=False)
+    specialite_name = fields.Char(string="Spécialité", related='employee_id.specialite_name', store=False,eadonly=True)
+
+
     date_start = fields.Date('Date debut détachement', required=True, default=fields.Date.today, tracking=True, index=True)
     date_end = fields.Date('Date fin détachement', tracking=True,
         help="Date fin de  détachement.")
@@ -38,6 +42,11 @@ class Detachement(models.Model):
     duration_months = fields.Integer(compute="_compute_duration", store=False)
     duration_years = fields.Integer(compute="_compute_duration", store=False)
     duration_display = fields.Char('La durée du détachement',compute="_compute_duration", store=False)
+    # Champ pour définir le type de détachement (entrant ou sortant)
+    detachment_type = fields.Selection([
+        ('sortant', 'Sortant (UM:Administration d\'origine)'),
+        ('entrant', 'Entrant (UM Administration d\'accueil)'),
+    ], string='Type de détachement', required=True, default='sortant', tracking=True)
         
    
     notes = fields.Html('Notes')
@@ -48,7 +57,7 @@ class Detachement(models.Model):
         ('cancel', 'Cancelled')
     ], string='Status', group_expand=True, copy=False,
         tracking=True, help='Status of the detachement', default='draft')
-    company_id = fields.Many2one('res.company', compute='_compute_employee_detachement', store=True, readonly=False,
+    company_id = fields.Many2one('res.company', string='Établissement',compute='_compute_employee_detachement',store=True, readonly=False,
         default=lambda self: self.env.company, required=True)
     company_country_id = fields.Many2one('res.country', string="Pays de détachement", related='organisme_etranger_id.country_id', readonly=True)
     country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True)

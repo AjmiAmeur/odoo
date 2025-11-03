@@ -99,14 +99,16 @@
             <field name="arch" type="xml">
                 <search string="Search Detachement">
                     <field name="name" string="Détachement"/>
-                    <field name="date_start"/>
-                    <field name="date_end"/>
+                    <field name="date_start" string='Date debut détachement'/>
+                    <field name="date_end" string='Date fin détachement'/>
                     <field name="employee_id"/>
-                    <filter string="Running Detachements" name="running" domain="[('state', '=', 'open')]"/>
-                    <filter string="Detachements to review" name="not_running" domain="[('state', 'in', ['draft', 'close'])]"/>
+                    <filter string="Détachements sortants" name="sortant" domain="[('detachment_type', '=', 'sortant')]"/>
+                    <filter string="Détachements entrants" name="entrant" domain="[('detachment_type', '=', 'entrant')]"/>
+                    <filter string="Détachements en cours" name="running" domain="[('state', '=', 'open')]"/>
+                    <filter string="Détachements à examiner" name="not_running" domain="[('state', 'in', ['draft', 'close'])]"/>
                     <separator />
-                    <filter string="Start Date" name="start_date" date="date_start"/>
-                    <filter string="End Date" name="end_date" date="date_end"/>
+                    <filter string="Date debut détachement" name="start_date" date="date_start"/>
+                    <filter string="Date fin détachement" name="date_end" date="date_end"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <separator/>
@@ -118,9 +120,12 @@
                     <filter string="Future Activities" name="activities_upcoming_all"
                         domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <group expand="0" string="Group By">
+                        <filter string="Type" name="group_by_type" domain="[]" context="{'group_by': 'detachment_type'}"/>
                         <filter string="Status" name="group_by_state" domain="[]" context="{'group_by': 'state'}"/>
                         <filter string="Employee" name="group_by_employee" domain="[]" context="{'group_by': 'employee_id'}"/>
-                        <filter string="Start Date" name="group_by_date_start" domain="[]" context="{'group_by': 'date_start'}"/>
+                        <filter string="Date debut détachement" name="group_by_date_start" domain="[]" context="{'group_by': 'date_start'}"/>
+                        <filter string="Date fin détachement" name="group_by_end_date" domain="[]" context="{'group_by': 'date_end'}"/>
+
                     </group>
                 </search>
             </field>
@@ -160,6 +165,8 @@
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <div class="oe_title pe-0 w-100 mw-100" name="title">
+                            <field name="detachment_type" options="{'horizontal': true}" widget="radio" />
+
                             <h1 class="d-flex flex-row justify-content-between">
                                 <field name="name" class="text-truncate" placeholder="Référence Détachement"/>
                                 <field name="kanban_state"
@@ -181,6 +188,8 @@
                                 <!-- employee_id = fields.Many2one('hr.employee', string='Employee', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]") -->
                                 <field name="company_id" invisible="1"/>
                                 <field name="employee_id" widget="many2one_avatar_employee"/>
+                                <field name="grade_id"  readonly="1" options='{"no_open": True}'/>
+
                                 <field name="active_employee" invisible="1"/>
                                 <field name="date_start" />
                                 <field name="date_end" />
@@ -189,11 +198,13 @@
                                 
                             </group>
                             <group name="top_info_right">
+                                <field name="company_id" readonly="1" options="{'no_open': True, 'no_create': True}"/>
+                                <field name="specialite_name" readonly="1"/>
                                 <field name="organisme_detachement_id" groups="!hr_detachement.group_hr_detachement_manager" options="{'no_open': True, 'no_create': True}"/>
                                 <field name="organisme_detachement_id" groups="hr_detachement.group_hr_detachement_manager"/>
-                                <field name="organisme_etranger_id" groups="!hr_detachement.group_hr_detachement_manager" options="{'no_open': True, 'no_create': True}"/>
-                                <field name="organisme_etranger_id" groups="hr_detachement.group_hr_detachement_manager"/>
-                                <field name="company_country_id" widget="selection" readonly="1"/>
+                                <field name="organisme_etranger_id" groups="!hr_detachement.group_hr_detachement_manager" options="{'no_open': True, 'no_create': True}" invisible="detachment_type == 'entrant'"/>
+                                <field name="organisme_etranger_id" groups="hr_detachement.group_hr_detachement_manager" invisible="detachment_type == 'entrant'"/>
+                                <field name="company_country_id" widget="selection" readonly="1" invisible="detachment_type == 'entrant'"/>
                                 <field name="hr_responsible_id" widget="many2one_avatar_user" invisible="1"/>
                             </group>
                         </group>
@@ -221,6 +232,7 @@
                 <list string="Détachements" multi_edit="1" sample="1" default_order='date_start DESC'>
                     <field name="company_id" column_invisible="True"/>
                     <field name="employee_id" readonly="1" widget="many2one_avatar_employee"/>
+                    <field name="detachment_type" readonly="1"/>
                     <field name="name" readonly="1"/>
                     <field name="date_start" readonly="1"/>
                     <field name="date_end" readonly="1"/>
@@ -293,7 +305,7 @@
             <field name="path">employee-detachements</field>
             <field name="view_mode">list,kanban,form,activity</field>
             <field name="domain">[('employee_id', '!=', False)]</field>
-            <field name="context">{'search_default_group_by_state': 1}</field>
+            <field name="context">{'search_default_group_by_type': 1}</field>
             <field name="search_view_id" ref="hr_detachement_view_search"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
