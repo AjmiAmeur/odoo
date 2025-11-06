@@ -208,14 +208,25 @@ class BiometricDeviceDetails(models.Model):
                     continue
                 punching_time = fields.Datetime.to_string(entry.timestamp)
 
+                # ✅ Empêcher doublons (sans filtrer par address_id)
+                exists = zk_attendance.search([
+                    ('employee_id', '=', employee.id),
+                    ('punching_time', '=', punching_time),
+                    ('punch_type', '=', str(entry.punch)),
+                ], limit=1)
+
+                if exists:
+                    _logger.info(f"⏩ Pointage déjà existant - Ignoré ({employee.name} - {punching_time})")
+                    continue
+
                 data = {
                     'employee_id': employee.id,
                     'device_id_num': entry.user_id,
                     'attendance_type': str(entry.status),
                     'punch_type': str(entry.punch),
                     'punching_time': punching_time,
-                    'check_in': punching_time,  # ✅ OBLIGATOIRE
-                    'address_id': device.address_id.id,
+                    'check_in': punching_time,
+                    'address_id': device.address_id.id,   # On garde la valeur, mais pas dans la recherche
                 }
                 batch.append(data)
 
