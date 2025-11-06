@@ -25,6 +25,7 @@ import pytz
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from datetime import datetime, date
+import socket
 
 
 _logger = logging.getLogger(__name__)
@@ -50,6 +51,32 @@ class BiometricDeviceDetails(models.Model):
                                  default=lambda
                                      self: self.env.user.company_id.id,
                                  help='Current Company')
+    # ⬇️ Ajout du champ statut
+    device_status = fields.Selection(
+        [('online', 'Online'), ('offline', 'Offline')],
+        string="Statut",
+        compute="_compute_device_status",
+        store=False
+    )
+    device_status_display = fields.Char(string="Statut", compute="_compute_device_status")
+
+    @api.depends('device_ip', 'port_number')
+    def _compute_device_status(self):
+        for rec in self:
+            rec.device_status = 'offline'
+            rec.device_status_display = "🔴 Offline"
+            try:
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                sock.settimeout(1.5)   # Timeout court
+                result = sock.connect_ex((rec.device_ip, rec.port_number))
+                sock.close()
+                if result == 0:
+                    rec.device_status = 'online'
+                    rec.device_status_display = "🟢 Online"
+            except:
+                rec.device_status = 'offline'
+                rec.device_status_display = "🔴 Offline"
+
 
     def device_connect(self, zk):
         """Function for connecting the device with Odoo"""
@@ -60,22 +87,68 @@ class BiometricDeviceDetails(models.Model):
             return False
 
     def action_test_connection(self):
-        """Checking the connection status"""
-        zk = ZK(self.device_ip, port=self.port_number, timeout=30,
-                password=False, ommit_ping=False)
+        self.ensure_one()
+
+        ip = self.device_ip
+        port = self.port_number
+
+        # ----- Test réseau rapide (pas de blocage) -----
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(3)  # ⏱ Timeout 3 secondes maximum
+
         try:
-            if zk.connect():
+            result = sock.connect_ex((ip, port))
+            sock.close()
+
+            if result != 0:
+                # Port fermé → on stoppe ici → pas de hang
                 return {
                     'type': 'ir.actions.client',
                     'tag': 'display_notification',
                     'params': {
-                        'message': 'Successfully Connected',
-                        'type': 'success',
-                        'sticky': False
+                        'message': f"❌ Impossible de se connecter à {ip}:{port}. (Port fermé ou machine hors ligne)",
+                        'type': 'danger',
+                        'sticky': False,
                     }
                 }
-        except Exception as error:
-            raise ValidationError(f'{error}')
+
+        except Exception:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'message': f"❌ Test réseau échoué vers {ip}.",
+                    'type': 'danger',
+                    'sticky': False,
+                }
+            }
+
+        # ----- Si le port répond → on tente la connexion ZK -----
+        try:
+            zk = ZK(ip, port=port, timeout=5, password=0, ommit_ping=True)
+            conn = zk.connect()
+            conn.disconnect()
+
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'message': "✅ Connexion réussie",
+                    'type': 'success',
+                    'sticky': False,
+                }
+            }
+
+        except Exception as e:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'message': f"❌ Pointeuse détectée mais non accessible : {e}",
+                    'type': 'danger',
+                    'sticky': False,
+                }
+            }
 
     def action_set_timezone(self):
         """Function to set user's timezone to device"""
@@ -156,13 +229,10 @@ class BiometricDeviceDetails(models.Model):
 
 
     def action_download_attendance(self):
-        """Import only today's attendance logs using employee PIN."""
-        _logger.info(">>> Biometric sync START (today only, map by PIN)")
+        """Import ALL attendance logs using employee PIN."""
+        _logger.info(">>> Biometric sync START (ALL logs, map by PIN)")
 
         zk_attendance = self.env['zk.machine.attendance']
-
-        today_min = fields.Datetime.to_string(datetime.combine(date.today(), datetime.min.time()))
-        today_max = fields.Datetime.to_string(datetime.combine(date.today(), datetime.max.time()))
 
         for device in self:
             zk = ZK(device.device_ip, port=device.port_number, timeout=15, password=0,
@@ -180,25 +250,14 @@ class BiometricDeviceDetails(models.Model):
                 conn.disconnect()
                 raise UserError(_("No attendance logs found on device."))
 
-            new_logs = []
-            for log in logs:
-                punch_dt = fields.Datetime.to_string(log.timestamp)
-                if today_min <= punch_dt <= today_max:
-                    new_logs.append(log)
-
-            if not new_logs:
-                conn.enable_device()
-                conn.disconnect()
-                _logger.info(">>> No logs for today")
-                return True
-
-            _logger.info(f">>> Logs to import today: {len(new_logs)}")
+            new_logs = logs  # ✅ Import ALL logs
+            _logger.info(f">>> Total logs to import: {len(new_logs)}")
 
             batch = []
             BATCH_SIZE = 500
 
             for entry in new_logs:
-                _logger.info(f"USER_ID depuis pointeuse = {entry.user_id}, Punch = {entry.punch}, Time = {entry.timestamp}")
+                _logger.info(f"USER_ID = {entry.user_id}, Punch = {entry.punch}, Time = {entry.timestamp}")
 
                 employee = self.env['hr.employee'].search([
                     '|', ('pin', '=', str(entry.user_id)), ('pin', '=', entry.user_id),
@@ -206,9 +265,9 @@ class BiometricDeviceDetails(models.Model):
                 if not employee:
                     _logger.warning(f"⚠️ Aucun employé trouvé avec PIN = {entry.user_id}")
                     continue
+
                 punching_time = fields.Datetime.to_string(entry.timestamp)
 
-                # ✅ Empêcher doublons (sans filtrer par address_id)
                 exists = zk_attendance.search([
                     ('employee_id', '=', employee.id),
                     ('punching_time', '=', punching_time),
@@ -226,7 +285,7 @@ class BiometricDeviceDetails(models.Model):
                     'punch_type': str(entry.punch),
                     'punching_time': punching_time,
                     'check_in': punching_time,
-                    'address_id': device.address_id.id,   # On garde la valeur, mais pas dans la recherche
+                    'address_id': device.address_id.id,
                 }
                 batch.append(data)
 
@@ -240,8 +299,114 @@ class BiometricDeviceDetails(models.Model):
             conn.enable_device()
             conn.disconnect()
 
-            _logger.info(">>> Biometric sync COMPLETED (today only)")
+            _logger.info(">>> Biometric sync COMPLETED (ALL logs)")
             return True
+    def action_download_attendance_range(self, date_start, date_end):
+        """Import attendance logs for a specific date range, avoiding duplicates."""
+        _logger.info(f">>> Biometric sync START (range {date_start} → {date_end})")
+
+        zk_attendance = self.env['zk.machine.attendance']
+
+        range_min = datetime.combine(date_start, datetime.min.time())
+        range_max = datetime.combine(date_end, datetime.max.time())
+
+        for device in self:
+            zk = ZK(device.device_ip, port=device.port_number, timeout=15, password=0,
+                    force_udp=False, ommit_ping=True)
+
+            conn = self.device_connect(zk)
+            if not conn:
+                raise UserError(_("Unable to connect to the device. Check IP/Port."))
+
+            conn.disable_device()
+            logs = conn.get_attendance()
+
+            if not logs:
+                conn.enable_device()
+                conn.disconnect()
+                raise UserError(_("No attendance logs found on device."))
+
+            batch = []
+            BATCH_SIZE = 500
+
+            for entry in logs:
+                if not (range_min <= entry.timestamp <= range_max):
+                    continue
+
+                employee = self.env['hr.employee'].search([
+                    '|', ('pin', '=', str(entry.user_id)), ('pin', '=', entry.user_id),
+                ], limit=1)
+
+                if not employee:
+                    _logger.warning(f"Aucun employé trouvé avec PIN = {entry.user_id}")
+                    continue
+
+                punching_time = fields.Datetime.to_string(entry.timestamp)
+
+                exists = zk_attendance.search([
+                    ('employee_id', '=', employee.id),
+                    ('punching_time', '=', punching_time),
+                    ('punch_type', '=', str(entry.punch)),
+                ], limit=1)
+
+                if exists:
+                    continue
+
+                batch.append({
+                    'employee_id': employee.id,
+                    'device_id_num': entry.user_id,
+                    'attendance_type': str(entry.status),
+                    'punch_type': str(entry.punch),
+                    'punching_time': punching_time,
+                    'check_in': punching_time,
+                    'address_id': device.address_id.id,
+                })
+
+                if len(batch) >= BATCH_SIZE:
+                    zk_attendance.create(batch)
+                    batch = []
+
+            if batch:
+                zk_attendance.create(batch)
+
+            conn.enable_device()
+            conn.disconnect()
+
+            _logger.info(f">>> Biometric sync COMPLETED ({date_start} → {date_end})")
+
+        return True
+    def _convert_logs_to_hr(self, logs):
+        hr_attendance = self.env['hr.attendance']
+
+        for log in logs:
+            employee = log.employee_id
+            if not employee:
+                continue
+
+            punch_time = log.punching_time
+
+            # check-in
+            if log.punch_type == '0':
+                last_attendance = hr_attendance.search([
+                    ('employee_id', '=', employee.id),
+                    ('check_out', '=', False),
+                ], limit=1)
+                if not last_attendance:
+                    hr_attendance.create({
+                        'employee_id': employee.id,
+                        'check_in': punch_time,
+                    })
+
+            # check-out
+            else:
+                last_attendance = hr_attendance.search([
+                    ('employee_id', '=', employee.id),
+                    ('check_out', '=', False),
+                ], limit=1)
+                if last_attendance:
+                    last_attendance.write({'check_out': punch_time})
+       
+    
     def action_restart_device(self):
         """For restarting the device"""
         zk = ZK(self.device_ip, port=self.port_number, timeout=15,
@@ -254,7 +419,8 @@ class BiometricDeviceDetails(models.Model):
         MachineLogs = self.env['zk.machine.attendance']
 
         # Récupération des logs triés
-        logs = MachineLogs.search([], order="employee_id, punching_time")
+        logs = MachineLogs.search([], order="employee_id, punching_time asc")
+
 
         if not logs:
             raise UserError(_("Aucun pointage trouvé à convertir."))
@@ -301,3 +467,12 @@ class BiometricDeviceDetails(models.Model):
                     })
 
         return True
+    def open_import_wizard(self):
+        return {
+            'name': _("Importer pointages"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'zk.attendance.import.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'active_ids': self.ids},
+        }

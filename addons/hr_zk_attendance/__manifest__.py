@@ -36,6 +36,7 @@
         'python': ['pyzk'], },
     'data': [
         'security/ir.model.access.csv',
+        'wizard/zk_attendance_import_wizard_view.xml',   # Charger en premier ✅
         'views/biometric_device_details_views.xml',
         'views/daily_attendance_views.xml',
         'views/biometric_device_attendance_menus.xml',

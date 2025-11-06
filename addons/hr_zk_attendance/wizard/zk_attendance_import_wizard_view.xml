@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Action pour ouvrir le wizard -->
+    <record id="zk_attendance_import_wizard_action" model="ir.actions.act_window">
+        <field name="name">Importer Pointages par Période</field>
+        <field name="res_model">zk.attendance.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Vue du wizard -->
+    <record id="zk_attendance_import_wizard_view" model="ir.ui.view">
+        <field name="name">zk.attendance.import.wizard.form</field>
+        <field name="model">zk.attendance.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Importer les Pointages">
+                <group>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                </group>
+                <group>
+                    <field name="progress" widget="progressbar"/>
+                </group>
+                <footer>
+                    <button string="Importer" type="object" name="action_import" class="btn-primary"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

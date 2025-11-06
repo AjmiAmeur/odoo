@@ -9,6 +9,8 @@
                 <field name="name"/>
                 <field name="device_ip"/>
                 <field name="port_number"/>
+                <field name="device_status_display" widget="badge"/>
+
             </list>
         </field>
     </record>
@@ -24,6 +26,9 @@
                     <button name="action_download_attendance"
                             string="Download Data"
                             type="object" class="oe_highlight"/>
+                    <button name="%(zk_attendance_import_wizard_action)d" 
+                            type="action" class="oe_highlight" string="Importer par période"/>
+        
                     <button name="action_clear_attendance" string="Clear Data"
                             type="object" class="oe_highlight"
                             confirm="Are you sure you want to clear all
@@ -45,6 +50,9 @@
                         <field name="port_number"/>
                         <field name="address_id"/>
                     </group>
+                     <group>
+                           <field name="device_status_display" widget="badge" readonly="1"/>
+                      </group>
                     <button name="action_test_connection"
                             type="object" class="btn btn-secondary">
                         <i class="fa fa-fw o_button_icon fa-television"/>
