@@ -15,7 +15,7 @@ class ZKAttendanceImportWizard(models.TransientModel):
         if self.date_end < self.date_start:
             raise UserError(_("La date de fin doit être supérieure à la date de début."))
 
-        devices = self.env['biometric.device.details'].search([])
+        devices = self.env['hr.zk.biometric.device.details'].search([])
         if not devices:
             raise UserError(_("Aucun appareil biométrique configuré."))
 
@@ -31,7 +31,7 @@ class ZKAttendanceImportWizard(models.TransientModel):
             self.env.cr.commit()  # 🔥 Mise à jour directe dans la base
 
         # ✅ Phase 2 : Conversion des logs en hr.attendance
-        self.env['biometric.device.details'].action_sync_to_hr_attendance()
+        self.env['hr.zk.biometric.device.details'].action_sync_to_hr_attendance()
 
         done += 1
         self.progress = int((done * 100) / total_steps)

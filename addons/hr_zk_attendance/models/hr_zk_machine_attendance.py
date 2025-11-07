@@ -24,7 +24,7 @@ from odoo import api, fields, models
 
 class ZkMachineAttendance(models.Model):
     """Model to hold data from the biometric device"""
-    _name = 'zk.machine.attendance'
+    _name = 'hr.zk.machine.attendance'
     _description = 'Attendance'
     _inherit = 'hr.attendance'
 
@@ -50,3 +50,4 @@ class ZkMachineAttendance(models.Model):
                                     help="Punching time in the device")
     address_id = fields.Many2one('res.partner', string='Working Address',
                                  help="Working address of the employee")
+    device_id = fields.Many2one('biometric.device.details', string="Device")

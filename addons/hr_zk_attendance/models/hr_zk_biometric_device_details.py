@@ -37,7 +37,7 @@ except ImportError:
 
 class BiometricDeviceDetails(models.Model):
     """Model for configuring and connect the biometric device with odoo"""
-    _name = 'biometric.device.details'
+    _name = 'hr.zk.biometric.device.details'
     _description = 'Biometric Device Details'
 
     name = fields.Char(string='Name', required=True, help='Record Name')
@@ -185,45 +185,60 @@ class BiometricDeviceDetails(models.Model):
                 raise UserError(_(
                     "Please Check the Connection"))
 
-    def action_clear_attendance(self):
-        """Methode to clear record from the zk.machine.attendance model and
-        from the device"""
-        for info in self:
+    def action_clear_device_logs(self):
+        """Effacer le journal de présence dans la pointeuse uniquement"""
+        for device in self:
             try:
-                machine_ip = info.device_ip
-                zk_port = info.port_number
-                try:
-                    # Connecting with the device
-                    zk = ZK(machine_ip, port=zk_port, timeout=30,
-                            password=0, force_udp=False, ommit_ping=True)
-                except NameError:
-                    raise UserError(_(
-                        "Please install it with 'pip3 install pyzk'."))
-                conn = self.device_connect(zk)
-                if conn:
-                    conn.enable_device()
-                    clear_data = zk.get_attendance()
-                    if clear_data:
-                        # Clearing data in the device
-                        conn.clear_attendance()
-                        # Clearing data from attendance log
-                        self._cr.execute(
-                            """delete from zk_machine_attendance""")
-                        conn.disconnect()
-                    else:
-                        raise UserError(
-                            _('Unable to clear Attendance log.Are you sure '
-                              'attendance log is not empty.'))
+                zk = ZK(device.device_ip, port=device.port_number, timeout=30,
+                        password=0, force_udp=False, ommit_ping=True)
+
+                conn = device.device_connect(zk)
+                if not conn:
+                    raise UserError(_("Impossible de se connecter à la pointeuse."))
+
+                conn.enable_device()
+                clear_data = zk.get_attendance()
+
+                if clear_data:
+                    conn.clear_attendance()
+                    conn.disconnect()
                 else:
-                    raise UserError(
-                        _('Unable to connect to Attendance Device. Please use '
-                          'Test Connection button to verify.'))
+                    raise UserError(_("Aucun pointage trouvé dans la pointeuse."))
+
             except Exception as error:
-                raise ValidationError(f'{error}')
+                raise ValidationError(f"{error}")
+
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {"message": _("Données effacées de la pointeuse ✅"), "type": "success"}
+        }
+
+    def action_clear_odoo_logs(self):
+        """Effacer les logs uniquement dans le modèle Odoo"""
+        self.env.cr.execute("""DELETE FROM hr_zk_machine_attendance""")
+
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {"message": _("Données effacées dans Odoo ✅"), "type": "success"}
+        }
+
+    def action_clear_attendance(self):
+        """Effacer les données dans la pointeuse + Odoo (méthode complète)"""
+        self.action_clear_device_logs()
+        self.action_clear_odoo_logs()
+
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {"message": _("Nettoyage complet effectué ✅"), "type": "success"}
+        }
+
 
     @api.model
     def cron_download(self):
-        machines = self.env['biometric.device.details'].search([])
+        machines = self.env['hr.zk.biometric.device.details'].search([])
         for machine in machines:
             machine.action_download_attendance()
 
@@ -232,7 +247,7 @@ class BiometricDeviceDetails(models.Model):
         """Import ALL attendance logs using employee PIN."""
         _logger.info(">>> Biometric sync START (ALL logs, map by PIN)")
 
-        zk_attendance = self.env['zk.machine.attendance']
+        zk_attendance = self.env['hr.zk.machine.attendance']
 
         for device in self:
             zk = ZK(device.device_ip, port=device.port_number, timeout=15, password=0,
@@ -281,6 +296,7 @@ class BiometricDeviceDetails(models.Model):
                 data = {
                     'employee_id': employee.id,
                     'device_id_num': entry.user_id,
+                    'device_id': device.id,   # ✅ nouveau id de l'appareil
                     'attendance_type': str(entry.status),
                     'punch_type': str(entry.punch),
                     'punching_time': punching_time,
@@ -305,7 +321,7 @@ class BiometricDeviceDetails(models.Model):
         """Import attendance logs for a specific date range, avoiding duplicates."""
         _logger.info(f">>> Biometric sync START (range {date_start} → {date_end})")
 
-        zk_attendance = self.env['zk.machine.attendance']
+        zk_attendance = self.env['hr.zk.machine.attendance']
 
         range_min = datetime.combine(date_start, datetime.min.time())
         range_max = datetime.combine(date_end, datetime.max.time())
@@ -355,6 +371,7 @@ class BiometricDeviceDetails(models.Model):
                 batch.append({
                     'employee_id': employee.id,
                     'device_id_num': entry.user_id,
+                    'device_id': device.id,   # ✅ nouveau id de l'appareil
                     'attendance_type': str(entry.status),
                     'punch_type': str(entry.punch),
                     'punching_time': punching_time,
@@ -416,7 +433,7 @@ class BiometricDeviceDetails(models.Model):
     #*************
     def action_sync_to_hr_attendance(self):
         Attendance = self.env['hr.attendance']
-        MachineLogs = self.env['zk.machine.attendance']
+        MachineLogs = self.env['hr.zk.machine.attendance']
 
         # Récupération des logs triés
         logs = MachineLogs.search([], order="employee_id, punching_time asc")

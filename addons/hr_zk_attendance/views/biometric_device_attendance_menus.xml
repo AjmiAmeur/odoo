@@ -1,16 +1,27 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <!--    Defined all menus here -->
+
     <menuitem id="biometric_device_details_menu"
               name="Biometric Device"
               parent="hr_attendance.menu_hr_attendance_root"
               sequence="21"/>
+
     <menuitem id="biometric_device_details_sub_menu"
               action="biometric_device_details_action"
               parent="biometric_device_details_menu"
               sequence="21"/>
+
     <menuitem id="daily_attendance_menu"
               action="daily_attendance_action"
               parent="biometric_device_details_menu"
               groups="hr_attendance.group_hr_attendance_officer"/>
+
+    <!-- ✅ L’ACTION DOIT ÊTRE DANS LE <odoo> -->
+    <record id="action_daily_attendance_device_filtered" model="ir.actions.act_window">
+        <field name="name">Pointages de cet appareil</field>
+        <field name="res_model">hr.zk.daily.attendance</field>
+        <field name="view_mode">list,form,graph,pivot</field>
+        <field name="domain">[('device_id', '=', active_id)]</field>
+    </record>
+
 </odoo>

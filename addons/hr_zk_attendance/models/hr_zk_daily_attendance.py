@@ -24,7 +24,7 @@ from odoo import fields, models, tools
 
 class DailyAttendance(models.Model):
     """Model to hold data from the biometric device"""
-    _name = 'daily.attendance'
+    _name = 'hr.zk.daily.attendance'
     _description = 'Daily Attendance Report'
     _auto = False
     _order = 'punching_day desc'
@@ -45,12 +45,13 @@ class DailyAttendance(models.Model):
                                   help='The Punching Type of attendance')
     punching_time = fields.Datetime(string='Punching Time',
                                     help='Punching time in the device')
+    device_id = fields.Many2one('hr.zk.biometric.device.details', string="Device", help="Biometric Device")
 
     def init(self):
         """Retrieve the data for attendance report"""
-        tools.drop_view_if_exists(self._cr, 'daily_attendance')
+        tools.drop_view_if_exists(self._cr, 'hr_zk_daily_attendance')
         query = """
-            CREATE OR REPLACE VIEW daily_attendance AS (
+            CREATE OR REPLACE VIEW hr_zk_daily_attendance AS (
                 SELECT
                     z.id AS id,
                     z.employee_id AS employee_id,
@@ -58,8 +59,9 @@ class DailyAttendance(models.Model):
                     z.address_id AS address_id,
                     z.attendance_type AS attendance_type,
                     z.punching_time AS punching_time,
-                    z.punch_type AS punch_type
-                FROM zk_machine_attendance z
+                    z.punch_type AS punch_type,
+                    z.device_id AS device_id       
+                FROM hr_zk_machine_attendance z
                 JOIN hr_employee e ON z.employee_id = e.id
                 ORDER BY z.punching_time
             );

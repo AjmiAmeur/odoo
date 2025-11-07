@@ -19,6 +19,6 @@
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 ################################################################################
-from . import biometric_device_details
-from . import zk_machine_attendance
-from . import daily_attendance
+from . import hr_zk_biometric_device_details
+from . import hr_zk_machine_attendance
+from . import hr_zk_daily_attendance

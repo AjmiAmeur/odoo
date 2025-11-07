@@ -36,11 +36,18 @@
         'python': ['pyzk'], },
     'data': [
         'security/ir.model.access.csv',
-        'wizard/zk_attendance_import_wizard_view.xml',   # Charger en premier ✅
-        'views/biometric_device_details_views.xml',
+
+        'views/zk_attendance_import_wizard_view.xml',
+
         'views/daily_attendance_views.xml',
+
+        # ✅ Charger les menus + actions AVANT les vues qui les utilisent
         'views/biometric_device_attendance_menus.xml',
+
+        # ✅ Charger ensuite la vue formulaire qui appelle l'action
+        'views/biometric_device_details_views.xml',
     ],
+
     'images': ['static/description/banner.jpg'],
     'license': 'AGPL-3',
     'installable': True,
