@@ -244,10 +244,11 @@ class BiometricDeviceDetails(models.Model):
 
 
     def action_download_attendance(self):
-        """Import ALL attendance logs using employee PIN."""
+        """Import ALL attendance logs using employee PIN (correct UTC conversion)."""
         _logger.info(">>> Biometric sync START (ALL logs, map by PIN)")
 
         zk_attendance = self.env['hr.zk.machine.attendance']
+        tz = pytz.timezone('Africa/Tunis')
 
         for device in self:
             zk = ZK(device.device_ip, port=device.port_number, timeout=15, password=0,
@@ -265,24 +266,26 @@ class BiometricDeviceDetails(models.Model):
                 conn.disconnect()
                 raise UserError(_("No attendance logs found on device."))
 
-            new_logs = logs  # ✅ Import ALL logs
-            _logger.info(f">>> Total logs to import: {len(new_logs)}")
+            _logger.info(f">>> Total logs to import: {len(logs)}")
 
             batch = []
             BATCH_SIZE = 500
 
-            for entry in new_logs:
-                _logger.info(f"USER_ID = {entry.user_id}, Punch = {entry.punch}, Time = {entry.timestamp}")
-
+            for entry in logs:
                 employee = self.env['hr.employee'].search([
                     '|', ('pin', '=', str(entry.user_id)), ('pin', '=', entry.user_id),
                 ], limit=1)
+
                 if not employee:
                     _logger.warning(f"⚠️ Aucun employé trouvé avec PIN = {entry.user_id}")
                     continue
 
-                punching_time = fields.Datetime.to_string(entry.timestamp)
+                # Conversion locale → UTC → datetime naïf (Odoo exige naive datetime)
+                local_ts = tz.localize(entry.timestamp)
+                utc_ts = local_ts.astimezone(pytz.utc)
+                punching_time = utc_ts.replace(tzinfo=None)
 
+                # Vérifier si le pointage existe déjà
                 exists = zk_attendance.search([
                     ('employee_id', '=', employee.id),
                     ('punching_time', '=', punching_time),
@@ -296,11 +299,11 @@ class BiometricDeviceDetails(models.Model):
                 data = {
                     'employee_id': employee.id,
                     'device_id_num': entry.user_id,
-                    'device_id': device.id,   # ✅ nouveau id de l'appareil
+                    'device_id': device.id,
                     'attendance_type': str(entry.status),
                     'punch_type': str(entry.punch),
-                    'punching_time': punching_time,
-                    'check_in': punching_time,
+                    'punching_time': punching_time,  # UTC naive
+                    'check_in': punching_time,       # affiché selon TZ utilisateur
                     'address_id': device.address_id.id,
                 }
                 batch.append(data)
@@ -309,22 +312,29 @@ class BiometricDeviceDetails(models.Model):
                     zk_attendance.create(batch)
                     batch = []
 
+            # Créer le reste du batch
             if batch:
                 zk_attendance.create(batch)
 
             conn.enable_device()
             conn.disconnect()
 
-            _logger.info(">>> Biometric sync COMPLETED (ALL logs)")
-            return True
+        _logger.info(">>> Biometric sync COMPLETED (ALL logs)")
+        return True
+
+
     def action_download_attendance_range(self, date_start, date_end):
-        """Import attendance logs for a specific date range, avoiding duplicates."""
         _logger.info(f">>> Biometric sync START (range {date_start} → {date_end})")
 
         zk_attendance = self.env['hr.zk.machine.attendance']
+        tz = pytz.timezone('Africa/Tunis')
 
-        range_min = datetime.combine(date_start, datetime.min.time())
-        range_max = datetime.combine(date_end, datetime.max.time())
+        # ✅ Convertir les dates en datetimes (début & fin journée)
+        date_start_dt = datetime.combine(date_start, datetime.min.time())
+        date_end_dt = datetime.combine(date_end, datetime.max.time())
+
+        start_local = tz.localize(date_start_dt)
+        end_local = tz.localize(date_end_dt)
 
         for device in self:
             zk = ZK(device.device_ip, port=device.port_number, timeout=15, password=0,
@@ -335,29 +345,34 @@ class BiometricDeviceDetails(models.Model):
                 raise UserError(_("Unable to connect to the device. Check IP/Port."))
 
             conn.disable_device()
-            logs = conn.get_attendance()
+            logs = conn.get_attendance()   # ✅ Pas d'argument start/end
 
             if not logs:
                 conn.enable_device()
                 conn.disconnect()
                 raise UserError(_("No attendance logs found on device."))
 
+            _logger.info(f">>> Total logs retrieved: {len(logs)}")
+
+            # ✅ Filtrer les logs du range
+            logs = [l for l in logs if start_local <= tz.localize(l.timestamp) <= end_local]
+            _logger.info(f">>> Logs kept within range: {len(logs)}")
+
             batch = []
             BATCH_SIZE = 500
 
             for entry in logs:
-                if not (range_min <= entry.timestamp <= range_max):
-                    continue
-
                 employee = self.env['hr.employee'].search([
                     '|', ('pin', '=', str(entry.user_id)), ('pin', '=', entry.user_id),
                 ], limit=1)
 
                 if not employee:
-                    _logger.warning(f"Aucun employé trouvé avec PIN = {entry.user_id}")
                     continue
 
-                punching_time = fields.Datetime.to_string(entry.timestamp)
+                # ✅ Conversion locale → UTC → naïf
+                local_ts = tz.localize(entry.timestamp)
+                utc_ts = local_ts.astimezone(pytz.utc)
+                punching_time = utc_ts.replace(tzinfo=None)
 
                 exists = zk_attendance.search([
                     ('employee_id', '=', employee.id),
@@ -371,7 +386,7 @@ class BiometricDeviceDetails(models.Model):
                 batch.append({
                     'employee_id': employee.id,
                     'device_id_num': entry.user_id,
-                    'device_id': device.id,   # ✅ nouveau id de l'appareil
+                    'device_id': device.id,
                     'attendance_type': str(entry.status),
                     'punch_type': str(entry.punch),
                     'punching_time': punching_time,
@@ -389,9 +404,9 @@ class BiometricDeviceDetails(models.Model):
             conn.enable_device()
             conn.disconnect()
 
-            _logger.info(f">>> Biometric sync COMPLETED ({date_start} → {date_end})")
-
+        _logger.info(">>> Biometric sync COMPLETED (range)")
         return True
+
     def _convert_logs_to_hr(self, logs):
         hr_attendance = self.env['hr.attendance']
 
